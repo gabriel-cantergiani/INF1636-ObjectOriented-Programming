@@ -2,31 +2,22 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.awt.event.*;
 import Peça.*;
+import Listeners.*;
 
 public class Tabuleiro extends JComponent {
 
-	private Rectangle2D[][] casas = new Rectangle2D[8][8];
-	private Peça[][] posicoes = new Peça[8][8];
+	private Rectangle2D[][] casas;
+	private Peça[][] posicoes;
 	
 	private int larguraCasa, alturaCasa;
 	private int posicaoX, posicaoY;
 	
-	public Tabuleiro() {
+	public Tabuleiro(Peça[][] p, Rectangle2D[][] c) {
 		
-		for(int i=0; i<8; i++) {
-			casas[i] = new Rectangle2D[8];
-			posicoes[i] = new Peça[8];
-			for(int j=0; j<8; j++) {
-				casas[i][j] = new Rectangle2D.Double();
-				if(i>=2 && i<=5)
-					posicoes[i][j] = null;
-				else
-					posicoes[i][j] = new Peça();
-			}
-
-		}
-		
+		posicoes = p;
+		casas = c;
 		
 		for(int i=0; i<8; i++) {
 			for(int j=0; j<8; j++) {
