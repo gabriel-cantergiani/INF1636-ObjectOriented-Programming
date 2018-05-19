@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.*;
 import javax.imageio.*;
 
-public class Peça {
+public class Peça extends Component{
 	
 	private tipoPeça tipo;
 	private Image img;
