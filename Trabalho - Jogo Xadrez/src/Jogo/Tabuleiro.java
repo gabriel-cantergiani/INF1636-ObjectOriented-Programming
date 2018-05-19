@@ -1,3 +1,4 @@
+package Jogo;
 
 import javax.swing.*;
 import java.awt.*;

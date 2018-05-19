@@ -1,10 +1,10 @@
-
+import Jogo.Xadrez;
 
 public class Main {
 	
 	public static void main(String args[]) {
 		
-		XadrezFrame xadrez = new XadrezFrame("Xadrez");
+		Xadrez xadrez = new Xadrez("Xadrez");
 		
 		xadrez.setVisible(true);
 		
