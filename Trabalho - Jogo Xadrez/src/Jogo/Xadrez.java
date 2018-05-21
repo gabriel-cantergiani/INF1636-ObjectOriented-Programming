@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import Listeners.TratadorClique;
 import Peça.Peça;
+import Peça.tipoPeça;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -55,6 +56,156 @@ public class Xadrez extends JFrame {
 		}
 		
 	}
-
 	
+	public void novaMovimentacao (int i, int j) {
+		Color cor = Color.GREEN;
+		
+		if (posicoes[i][j].getTipo() == tipoPeça.Torre) movimentaTorre(i,j);
+		if (posicoes[i][j].getTipo() == tipoPeça.Bispo) movimentaBispo(i,j);
+		if (posicoes[i][j].getTipo() == tipoPeça.Cavalo) movimentaCavalo(i,j);
+		if (posicoes[i][j].getTipo() == tipoPeça.Rainha) movimentaRainha(i,j);
+		if (posicoes[i][j].getTipo() == tipoPeça.Peao) movimentaPeao(i,j);
+		if (posicoes[i][j].getTipo() == tipoPeça.Rei) movimentaRei(i,j);
+		
+	}
+	
+	public void movimentaTorre (int i, int j){
+		int auxi, auxj;
+		for (auxi = i; auxi < 8; auxi++) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][j]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][j]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][j]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		for (auxi = i; auxi >= 0; auxi--) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][j]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][j]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][j]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		for (auxj = j; auxj < 8; auxj++) {
+			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[i][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[i][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[i][auxj-1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		for (auxj = j; auxj >= 0; auxj--) {
+			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[i][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[i][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[i][auxj+1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+	}
+	
+	public void movimentaBispo (int i, int j) {
+		int auxi, auxj;
+		
+		for (auxi = i, auxj = j; auxi < 8 && auxj < 8; auxi++, auxj++) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][auxj-1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		
+		for (auxi = i, auxj = j; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][auxj+1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		
+		for (auxi = i, auxj = j; auxi < 8 && auxj >= 0; auxi++, auxj--) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][auxj+1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+		
+		for (auxi = i, auxj = j; auxi >= 0 && auxj < 8; auxi--, auxj++) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				// pinta de verde
+				// exclui peça inimigo de posicoes[auxi][auxj]
+				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				break;
+			}
+			else {
+				// não pinta de verde
+				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][auxj-1]
+				break;
+			}
+			// pinta de verde de qualquer jeito
+		}
+	}
+	
+	public void movimentaCavalo (int i, int j) {
+		
+	}
+
+	public void movimentaRainha (int i, int j) {
+		
+	}
+	
+	public void movimentaPeao (int i, int j) {
+		
+	}
+	
+	public void movimentaRei (int i, int j) {
+		
+	}
 }
