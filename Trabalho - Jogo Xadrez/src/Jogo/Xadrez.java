@@ -11,8 +11,9 @@ import java.awt.geom.Rectangle2D;
 
 public class Xadrez extends JFrame {
 
-	private Rectangle2D[][] casas = new Rectangle2D[8][8];
+	private int[][] casas = new int[8][8];
 	private Peça[][] posicoes = new Peça[8][8];
+	
 	
 	public Xadrez(String titulo) {
 		
@@ -20,8 +21,8 @@ public class Xadrez extends JFrame {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		Dimension ss = tk.getScreenSize();
 		
-		criaCasas();
 		criaPeças();
+		zeraCasas();
 		
 		Tabuleiro tabuleiro = new Tabuleiro(posicoes, casas);
 		
@@ -32,16 +33,15 @@ public class Xadrez extends JFrame {
 		
 		this.getContentPane().add(tabuleiro);
 		
-	}
-	
-	private void criaCasas() {
 		
-		for(int i=0; i<8; i++) {
-			casas[i] = new Rectangle2D[8];
-			for(int j=0; j<8; j++)
-				casas[i][j] = new Rectangle2D.Double();
-		}
+	}
 
+	private void zeraCasas () {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j< 8; j++) {
+				this.casas[i][j] = 0;
+			}
+		}
 	}
 	
 	private void criaPeças() {
@@ -58,7 +58,8 @@ public class Xadrez extends JFrame {
 	}
 	
 	public void novaMovimentacao (int i, int j) {
-		Color cor = Color.GREEN;
+		//Color cor = Color.GREEN;
+		
 		
 		if (posicoes[i][j].getTipo() == tipoPeça.Torre) movimentaTorre(i,j);
 		if (posicoes[i][j].getTipo() == tipoPeça.Bispo) movimentaBispo(i,j);
@@ -71,6 +72,7 @@ public class Xadrez extends JFrame {
 	
 	public void movimentaTorre (int i, int j){
 		int auxi, auxj;
+		
 		for (auxi = i; auxi < 8; auxi++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				// pinta de verde
@@ -85,6 +87,7 @@ public class Xadrez extends JFrame {
 			}
 			// pinta de verde de qualquer jeito
 		}
+		
 		for (auxi = i; auxi >= 0; auxi--) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				// pinta de verde

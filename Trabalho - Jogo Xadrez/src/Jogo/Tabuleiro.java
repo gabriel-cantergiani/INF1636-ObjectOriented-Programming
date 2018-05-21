@@ -9,16 +9,23 @@ import Listeners.*;
 
 public class Tabuleiro extends JComponent {
 
-	private Rectangle2D[][] casas;
+	private Rectangle2D[][] Rect2D = new Rectangle2D[8][8];
 	private Peça[][] posicoes;
+	private int[][] casas;
 	
 	private int larguraCasa, alturaCasa;
 	private int posicaoX, posicaoY;
 	
-	public Tabuleiro(Peça[][] p, Rectangle2D[][] c) {
+	public Tabuleiro(Peça[][] p, int[][] c) {
 		
 		posicoes = p;
 		casas = c;
+		
+		for(int i=0; i<8; i++) {
+			Rect2D[i] = new Rectangle2D[8];
+			for(int j=0; j<8; j++)
+				Rect2D[i][j] = new Rectangle2D.Double();
+		}
 		
 		for(int i=0; i<8; i++) {
 			for(int j=0; j<8; j++) {
@@ -120,9 +127,9 @@ public class Tabuleiro extends JComponent {
 			posicaoY = alturaCasa*i;
 			for(int j=0; j<8; j++) {
 				posicaoX = larguraCasa*j;
-				casas[i][j].setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);
+				Rect2D[i][j].setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);
 				g2d.setPaint(cor);
-				g2d.fill(casas[i][j]);
+				g2d.fill(Rect2D[i][j]);
 				
 				if(posicoes[i][j]!=null) {
 					g2d.drawImage(posicoes[i][j].getImg(), posicaoX+((larguraCasa-65)/2), posicaoY+((alturaCasa-65)/2), 65, 65, null);
