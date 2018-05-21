@@ -233,5 +233,50 @@ public class Xadrez extends JFrame {
 	
 	public void movimentaRei (int i, int j) {
 		
+		int auxi, auxj;
+		
+		if ((auxi = i + 1) < 8) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor() || posicoes[auxi][j] == null) {
+				casas[auxi][j] = 1;
+			}
+			if ((auxj = j + 1) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;
+				}
+			}
+			if ((auxj = j - 1) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;
+				}
+			}
+		}
+		
+		if ((auxi = i - 1) >= 0) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor() || posicoes[auxi][j] == null) {
+				casas[auxi][j] = 1;
+			}
+			if ((auxj = j + 1) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;
+				}
+			}
+			if ((auxj = j - 1) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;
+				}
+			}
+		}
+		
+		if ((auxj = j - 1) >= 0) {
+			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor() || posicoes[i][auxj] == null) {
+				casas[i][auxj] = 1;
+			}
+		}
+		
+		if ((auxj = j + 1) < 8) {
+			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor() || posicoes[i][auxj] == null) {
+				casas[i][auxj] = 1;
+			}
+		}
 	}
 }
