@@ -58,8 +58,6 @@ public class Xadrez extends JFrame {
 	}
 	
 	public void novaMovimentacao (int i, int j) {
-		//Color cor = Color.GREEN;
-		
 		
 		if (posicoes[i][j].getTipo() == tipoPeça.Torre) movimentaTorre(i,j);
 		if (posicoes[i][j].getTipo() == tipoPeça.Bispo) movimentaBispo(i,j);
@@ -71,137 +69,162 @@ public class Xadrez extends JFrame {
 	}
 	
 	public void movimentaTorre (int i, int j){
+		
 		int auxi, auxj;
 		
 		for (auxi = i; auxi < 8; auxi++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][j]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][j]
+				casas[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][j]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[auxi][j].getCor()) {
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
+			casas[auxi][j] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i; auxi >= 0; auxi--) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][j]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][j]
+				casas[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][j]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[auxi][j].getCor()){
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
+			casas[auxi][j] = 1;  // é um movimento possível
 		}
 		for (auxj = j; auxj < 8; auxj++) {
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[i][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[i][auxj]
+				casas[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[i][auxj-1]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[i][auxj].getCor()) {
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
+			casas[i][auxj] = 1;  // é um movimento possível
 		}
 		for (auxj = j; auxj >= 0; auxj--) {
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[i][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[i][auxj]
+				casas[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[i][auxj+1]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[i][auxj].getCor()) {
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
+			casas[i][auxj] = 1;  // é um movimento possível
 		}
 	}
 	
 	public void movimentaBispo (int i, int j) {
+		
 		int auxi, auxj;
 		
 		for (auxi = i, auxj = j; auxi < 8 && auxj < 8; auxi++, auxj++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][auxj-1]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
+			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i, auxj = j; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][auxj+1]
-				break;
+			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+				break;  // não é um movimento possível
 			}
-			// pinta de verde de qualquer jeito
-		}
-		
-		for (auxi = i, auxj = j; auxi < 8 && auxj >= 0; auxi++, auxj--) {
-			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
-				break;
-			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi-1][auxj+1]
-				break;
-			}
-			// pinta de verde de qualquer jeito
+			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i, auxj = j; auxi >= 0 && auxj < 8; auxi--, auxj++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				// pinta de verde
-				// exclui peça inimigo de posicoes[auxi][auxj]
-				// posiciona peça de posicoes[i][j] para posicoes[auxi][auxj]
+				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else {
-				// não pinta de verde
-				// posiciona peça de posicoes[i][j] para posicoes[auxi+1][auxj-1]
+			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+				break;  // não é um movimento possível
+			}
+			casas[auxi][auxj] = 1;  // é um movimento possível
+		}
+		
+		for (auxi = i, auxj = j; auxi < 8 && auxj >= 0; auxi++, auxj--) {
+			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			// pinta de verde de qualquer jeito
+			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+				break;  // não é um movimento possível
+			}
+			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 	}
 	
 	public void movimentaCavalo (int i, int j) {
 		
+		int auxi, auxj;
+		
+		if ((auxi = i - 1) >= 0) {
+			if ((auxj = j - 2) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+			if ((auxj = j + 2) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+		}
+		
+		if ((auxi = i - 2) >= 0) {
+			if ((auxj = j - 1) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+			if ((auxj = j + 1) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+		}
+		
+		if ((auxi = i + 1) < 8) {
+			if ((auxj = j - 2) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+			if ((auxj = j + 2) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+		}
+		
+		if ((auxi = i + 2) < 8) {
+			if ((auxj = j - 1) >= 0) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+			if ((auxj = j + 1) < 8) {
+				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+					casas[auxi][auxj] = 1;  // é um movimento possível
+				}
+			}
+		}
+		
 	}
 
 	public void movimentaRainha (int i, int j) {
-		
+		movimentaTorre(i,j);
+		movimentaBispo(i,j);
 	}
 	
 	public void movimentaPeao (int i, int j) {
