@@ -63,8 +63,11 @@ public class Xadrez extends JFrame {
 	
 	public void Recebe_Clique(int i, int j) {
 		
-		if(posicoes[i][j] != null)		// peça foi selecionada para começar uma jogada
+		if(posicoes[i][j] != null) {		// peça foi selecionada para começar uma jogada
+			if(selecao==1) 
+				zeraCasas();
 			Peça_Selecionada(i,j);
+		}
 		else if(posicoes[i][j] == null && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
 			Casa_Selecionada(i,j);
 		// Nenhum dos casos acima, ignora o clique
