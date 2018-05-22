@@ -176,47 +176,59 @@ public class Xadrez extends JFrame {
 		int auxi, auxj;
 		
 		for (auxi = i+1, auxj = j+1; auxi < 8 && auxj < 8; auxi++, auxj++) {
+			if (posicoes[auxi][auxj] == null) {
+				casas[auxi][auxj] = 1;  // é um movimento possível
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i-1, auxj = j-1; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
+			if (posicoes[auxi][auxj] == null) {
+				casas[auxi][auxj] = 1;  // é um movimento possível
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i-1, auxj = j+1; auxi >= 0 && auxj < 8; auxi--, auxj++) {
+			if (posicoes[auxi][auxj] == null) {
+				casas[auxi][auxj] = 1;  // é um movimento possível
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
 		for (auxi = i+1, auxj = j-1; auxi < 8 && auxj >= 0; auxi++, auxj--) {
+			if (posicoes[auxi][auxj] == null) {
+				casas[auxi][auxj] = 1;  // é um movimento possível
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][auxj].getCor()){
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 	}
 	
