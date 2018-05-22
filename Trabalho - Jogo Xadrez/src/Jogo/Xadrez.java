@@ -67,8 +67,10 @@ public class Xadrez extends JFrame {
 			Peça_Selecionada(i,j);
 		else if(posicoes[i][j] == null && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
 			Casa_Selecionada(i,j);
-		else											// Nenhum dos casos acima, ignora o clique
-			return;	
+		// Nenhum dos casos acima, ignora o clique
+		
+		tabuleiro.repaint();
+		return;	
 			
 	}
 	
@@ -86,7 +88,6 @@ public class Xadrez extends JFrame {
 				return;
 			return;	// falta implementar captura de outra peça
 		}
-		
 	}
 
 	public void Casa_Selecionada(int i, int j) {
@@ -115,46 +116,58 @@ public class Xadrez extends JFrame {
 		
 		int auxi, auxj;
 		
-		for (auxi = i; auxi < 8; auxi++) {
+		for (auxi = i+1; auxi < 8; auxi++) {
+			if (posicoes[auxi][j]==null) {
+				casas[auxi][j] = 1;
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				casas[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][j].getCor()) {
-				break;  // não é um movimento possível
+			else {
+				break;
 			}
-			casas[auxi][j] = 1;  // é um movimento possível
 		}
 		
-		for (auxi = i; auxi >= 0; auxi--) {
+		for (auxi = i-1; auxi >= 0; auxi--) {
+			if (posicoes[auxi][j]==null) {
+				casas[auxi][j] = 1;
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				casas[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[auxi][j].getCor()){
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[auxi][j] = 1;  // é um movimento possível
 		}
-		for (auxj = j; auxj < 8; auxj++) {
+		for (auxj = j+1; auxj < 8; auxj++) {
+			if(posicoes[i][auxj]==null) {
+				casas[i][auxj] = 1;
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
 				casas[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[i][auxj].getCor()) {
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[i][auxj] = 1;  // é um movimento possível
 		}
-		for (auxj = j; auxj >= 0; auxj--) {
+		for (auxj = j-1; auxj >= 0; auxj--) {
+			if(posicoes[i][auxj]==null) {
+				casas[i][auxj] = 1;
+				continue;
+			}
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
 				casas[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
-			else if (posicoes[i][j].getCor() == posicoes[i][auxj].getCor()) {
+			else {
 				break;  // não é um movimento possível
 			}
-			casas[i][auxj] = 1;  // é um movimento possível
 		}
 	}
 	
