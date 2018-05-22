@@ -38,8 +38,9 @@ public class TratadorClique extends MouseAdapter implements MouseListener{
 				
 				j = x/larguraCasa;
 			
-			
 			System.out.println("Clique na posicao [i][j] = ["+i+"]["+j+"]");
+			
+			jogo.Recebe_Clique(i, j);
 			
 		}
 		

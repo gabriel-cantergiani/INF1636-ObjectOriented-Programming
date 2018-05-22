@@ -11,8 +11,12 @@ import java.awt.geom.Rectangle2D;
 
 public class Xadrez extends JFrame {
 
+	public Tabuleiro tabuleiro;
 	private int[][] casas = new int[8][8];
 	private Peça[][] posicoes = new Peça[8][8];
+	private int selecao = 0; // selecao = 0 -> nada selecionado,  selecao = 1 -> peça selecionada
+	private Peça peça;
+	private int iOrigem, jOrigem;	// indices de origem da peça a ser movimentada
 	
 	
 	public Xadrez(String titulo) {
@@ -24,7 +28,7 @@ public class Xadrez extends JFrame {
 		criaPeças();
 		zeraCasas();
 		
-		Tabuleiro tabuleiro = new Tabuleiro(posicoes, casas);
+		tabuleiro = new Tabuleiro(posicoes, casas);
 		
 		tabuleiro.addMouseListener(new TratadorClique(this, tabuleiro));
 		this.getContentPane().setBackground(Color.gray);
@@ -55,6 +59,45 @@ public class Xadrez extends JFrame {
 					posicoes[i][j] = new Peça();
 		}
 		
+	}
+	
+	public void Recebe_Clique(int i, int j) {
+		
+		if(posicoes[i][j] != null)		// peça foi selecionada para começar uma jogada
+			Peça_Selecionada(i,j);
+		else if(posicoes[i][j] == null && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
+			Casa_Selecionada(i,j);
+		else											// Nenhum dos casos acima, ignora o clique
+			return;	
+			
+	}
+	
+	public void Peça_Selecionada(int i, int j) {
+		
+		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
+			iOrigem = i;
+			jOrigem = j;
+			peça = posicoes[i][j];
+			selecao = 1;
+			novaMovimentacao(i,j);
+		}
+		else {								// Peça da outra cor foi selecionada. Verifica se o movimento é viável...
+			if(posicoes[i][j] == peça)	// peça clicada é a mesma anterior  ->aborta
+				return;
+			return;	// falta implementar captura de outra peça
+		}
+		
+	}
+
+	public void Casa_Selecionada(int i, int j) {
+		
+		if(casas[i][j] == 1) {	// casa é válida -> efetua a movimentação
+			posicoes[iOrigem][jOrigem] = null;
+			posicoes[i][j] = peça;
+			tabuleiro.repaint();
+		}
+		zeraCasas();
+		selecao = 0;
 	}
 	
 	public void novaMovimentacao (int i, int j) {
@@ -170,12 +213,12 @@ public class Xadrez extends JFrame {
 		
 		if ((auxi = i - 1) >= 0) {
 			if ((auxj = j - 2) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
 			if ((auxj = j + 2) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
@@ -183,12 +226,12 @@ public class Xadrez extends JFrame {
 		
 		if ((auxi = i - 2) >= 0) {
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
@@ -196,12 +239,12 @@ public class Xadrez extends JFrame {
 		
 		if ((auxi = i + 1) < 8) {
 			if ((auxj = j - 2) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
 			if ((auxj = j + 2) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
@@ -209,12 +252,12 @@ public class Xadrez extends JFrame {
 		
 		if ((auxi = i + 2) < 8) {
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;  // é um movimento possível
 				}
 			}
