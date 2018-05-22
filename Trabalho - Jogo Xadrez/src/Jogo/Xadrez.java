@@ -285,6 +285,15 @@ public class Xadrez extends JFrame {
 	
 	public void movimentaPeao (int i, int j) {
 		
+		if (i == 6 && posicoes[i][j].getCor() == 0 && posicoes[i-2][j] == null) casas[i-2][j] = 1;
+		if (i == 1 && posicoes[i][j].getCor() == 1 && posicoes[i+2][j] == null) casas[i+2][j] = 1;
+		if (posicoes[i][j].getCor() == 0 && posicoes[i-1][j] == null && (i - 1) >= 0) casas[i-1][j] = 1;
+		if (posicoes[i][j].getCor() == 1 && posicoes[i+1][j] == null && (i + 1) < 8) casas[i+1][j] = 1;
+		if (posicoes[i][j].getCor() == 0 && posicoes[i-1][j-1].getCor() == 1) casas[i-1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 0 && posicoes[i-1][j+1].getCor() == 1) casas[i-1][j+1] = 1;
+		if (posicoes[i][j].getCor() == 1 && posicoes[i+1][j-1].getCor() == 1) casas[i+1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 1 && posicoes[i+1][j+1].getCor() == 1) casas[i+1][j+1] = 1;
+		
 	}
 	
 	public void movimentaRei (int i, int j) {
