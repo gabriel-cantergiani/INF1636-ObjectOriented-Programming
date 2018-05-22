@@ -127,12 +127,16 @@ public class Tabuleiro extends JComponent {
 			posicaoY = alturaCasa*i;
 			for(int j=0; j<8; j++) {
 				posicaoX = larguraCasa*j;
-				Rect2D[i][j].setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);
-				if(casas[i][j]==1)
-					g2d.setPaint(Color.green);
-				else
-					g2d.setPaint(cor);
+				g2d.setPaint(cor);
+				Rect2D[i][j].setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);					
 				g2d.fill(Rect2D[i][j]);
+				
+				if(casas[i][j]==1) {
+					g2d.setPaint(Color.green);
+					Rect2D[i][j].setRect(posicaoX+((larguraCasa)/10), posicaoY+((alturaCasa)/10), 4*larguraCasa/5, 4*alturaCasa/5);
+					g2d.fill(Rect2D[i][j]);
+				}
+				
 				
 				if(posicoes[i][j]!=null) {
 					g2d.drawImage(posicoes[i][j].getImg(), posicaoX+((larguraCasa-65)/2), posicaoY+((alturaCasa-65)/2), 65, 65, null);
