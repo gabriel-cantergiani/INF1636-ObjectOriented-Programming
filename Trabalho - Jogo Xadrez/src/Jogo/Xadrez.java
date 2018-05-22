@@ -175,7 +175,7 @@ public class Xadrez extends JFrame {
 		
 		int auxi, auxj;
 		
-		for (auxi = i, auxj = j; auxi < 8 && auxj < 8; auxi++, auxj++) {
+		for (auxi = i+1, auxj = j+1; auxi < 8 && auxj < 8; auxi++, auxj++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
@@ -186,7 +186,7 @@ public class Xadrez extends JFrame {
 			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
-		for (auxi = i, auxj = j; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
+		for (auxi = i-1, auxj = j-1; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
@@ -197,7 +197,7 @@ public class Xadrez extends JFrame {
 			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
-		for (auxi = i, auxj = j; auxi >= 0 && auxj < 8; auxi--, auxj++) {
+		for (auxi = i-1, auxj = j+1; auxi >= 0 && auxj < 8; auxi--, auxj++) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
@@ -208,7 +208,7 @@ public class Xadrez extends JFrame {
 			casas[auxi][auxj] = 1;  // é um movimento possível
 		}
 		
-		for (auxi = i, auxj = j; auxi < 8 && auxj >= 0; auxi++, auxj--) {
+		for (auxi = i+1, auxj = j-1; auxi < 8 && auxj >= 0; auxi++, auxj--) {
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 				casas[auxi][auxj] = 1;  // é um movimento possível
 				break;
@@ -301,45 +301,45 @@ public class Xadrez extends JFrame {
 		int auxi, auxj;
 		
 		if ((auxi = i + 1) < 8) {
-			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor() || posicoes[auxi][j] == null) {
+			if (posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				casas[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxi = i - 1) >= 0) {
-			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor() || posicoes[auxi][j] == null) {
+			if (posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
 				casas[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor() || posicoes[auxi][auxj] == null) {
+				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxj = j - 1) >= 0) {
-			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor() || posicoes[i][auxj] == null) {
+			if (posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor() ) {
 				casas[i][auxj] = 1;
 			}
 		}
 		
 		if ((auxj = j + 1) < 8) {
-			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor() || posicoes[i][auxj] == null) {
+			if (posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
 				casas[i][auxj] = 1;
 			}
 		}
