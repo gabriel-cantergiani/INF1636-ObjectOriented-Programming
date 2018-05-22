@@ -64,7 +64,7 @@ public class Xadrez extends JFrame {
 	public void Recebe_Clique(int i, int j) {
 		
 		if(posicoes[i][j] != null) {		// peça foi selecionada para começar uma jogada
-			if(selecao==1) 
+			if(posicoes[i][j]!=peça)
 				zeraCasas();
 			Peça_Selecionada(i,j);
 		}
@@ -86,9 +86,7 @@ public class Xadrez extends JFrame {
 			selecao = 1;
 			novaMovimentacao(i,j);
 		}
-		else {								// Peça da outra cor foi selecionada. Verifica se o movimento é viável...
-			if(posicoes[i][j] == peça)	// peça clicada é a mesma anterior  ->aborta
-				return;
+		else {								// Peça da outra cor foi selecionada. Verifica se a captura é viável...
 			return;	// falta implementar captura de outra peça
 		}
 	}
@@ -98,7 +96,6 @@ public class Xadrez extends JFrame {
 		if(casas[i][j] == 1) {	// casa é válida -> efetua a movimentação
 			posicoes[iOrigem][jOrigem] = null;
 			posicoes[i][j] = peça;
-			tabuleiro.repaint();
 		}
 		zeraCasas();
 		selecao = 0;
@@ -306,8 +303,8 @@ public class Xadrez extends JFrame {
 		if (posicoes[i][j].getCor() == 1 && posicoes[i+1][j] == null && (i + 1) < 8) casas[i+1][j] = 1;
 		if (posicoes[i][j].getCor() == 0 && j>0 && posicoes[i-1][j-1]!=null && posicoes[i-1][j-1].getCor() == 1) casas[i-1][j-1] = 1;
 		if (posicoes[i][j].getCor() == 0 && j<7 && posicoes[i-1][j+1]!=null && posicoes[i-1][j+1].getCor() == 1) casas[i-1][j+1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor() == 1) casas[i+1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor() == 1) casas[i+1][j+1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor() == 0) casas[i+1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor() == 0) casas[i+1][j+1] = 1;
 		
 	}
 	

@@ -4,28 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
+import java.awt.color.*;
 import Peça.*;
 import Listeners.*;
 
 public class Tabuleiro extends JComponent {
 
-	private Rectangle2D[][] Rect2D = new Rectangle2D[8][8];
+	private Rectangle2D Rect2D = new Rectangle2D.Double();
 	private Peça[][] posicoes;
 	private int[][] casas;
 	
 	private int larguraCasa, alturaCasa;
+	private int larguraPeça, alturaPeça;
 	private int posicaoX, posicaoY;
 	
 	public Tabuleiro(Peça[][] p, int[][] c) {
 		
 		posicoes = p;
 		casas = c;
-		
-		for(int i=0; i<8; i++) {
-			Rect2D[i] = new Rectangle2D[8];
-			for(int j=0; j<8; j++)
-				Rect2D[i][j] = new Rectangle2D.Double();
-		}
 		
 		for(int i=0; i<8; i++) {
 			for(int j=0; j<8; j++) {
@@ -121,25 +117,31 @@ public class Tabuleiro extends JComponent {
 		Color cor = Color.WHITE;
 		larguraCasa = this.getWidth()/8;
 		alturaCasa = this.getHeight()/8;
-
+		larguraPeça = 11*larguraCasa/20;
+		alturaPeça = 11*alturaCasa/20;
+		Color casaVerde = new Color(41, 198, 47, 150);
+		
+		System.out.println(larguraCasa+", "+alturaCasa);
 		
 		for(int i=0; i<8; i++) {
 			posicaoY = alturaCasa*i;
 			for(int j=0; j<8; j++) {
 				posicaoX = larguraCasa*j;
 				g2d.setPaint(cor);
-				Rect2D[i][j].setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);					
-				g2d.fill(Rect2D[i][j]);
+				Rect2D.setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);					
+				g2d.fill(Rect2D);
 				
 				if(casas[i][j]==1) {
+					//g2d.setPaint(casaVerde);
+					//Rect2D.setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);
 					g2d.setPaint(Color.green);
-					Rect2D[i][j].setRect(posicaoX+((larguraCasa)/10), posicaoY+((alturaCasa)/10), 4*larguraCasa/5, 4*alturaCasa/5);
-					g2d.fill(Rect2D[i][j]);
+					Rect2D.setRect(posicaoX+((larguraCasa)/10), posicaoY+((alturaCasa)/10), 4*larguraCasa/5, 4*alturaCasa/5);
+					g2d.fill(Rect2D);
 				}
 				
 				
 				if(posicoes[i][j]!=null) {
-					g2d.drawImage(posicoes[i][j].getImg(), posicaoX+((larguraCasa-65)/2), posicaoY+((alturaCasa-65)/2), 65, 65, null);
+					g2d.drawImage(posicoes[i][j].getImg(), posicaoX+((larguraCasa-larguraPeça)/2), posicaoY+((alturaCasa-alturaPeça)/2), larguraPeça, alturaPeça, null);
 				}
 				
 				if(cor == Color.WHITE)
