@@ -312,50 +312,81 @@ public class Xadrez extends JFrame {
 		
 	}
 	
+	public void movimentaPeaoCaptura (int i, int j) {
+		if (posicoes[i][j].getCor() == 0 && j>0) casas[i-1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 0 && j<7) casas[i-1][j+1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j>0) casas[i+1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j<7) casas[i+1][j+1] = 1;
+	}
+	
 	public void movimentaRei (int i, int j) {
 		
 		int auxi, auxj;
+		int[][] auxRei = new int[8][8];
+		
+		for (auxi = 0; auxi < 8; auxi++) {
+			for (auxj = 0; auxj < 8; auxj++) {
+				if (posicoes[auxi][auxj] != null && posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+					if (posicoes[auxi][auxj].getTipo() == tipoPeça.Peao) {
+						movimentaPeaoCaptura(auxi,auxj);
+						continue;
+					}
+					if (posicoes[auxi][auxj].getTipo() == tipoPeça.Rei) continue;
+					novaMovimentacao(auxi,auxj);
+				}
+			}
+		}
+		
+		for (auxi = 0; auxi < 8; auxi++) {
+			for (auxj = 0; auxj < 8; auxj++) {
+				if (casas[auxi][auxj] == 1) {
+					auxRei[auxi][auxj] = 1;
+				}
+			}
+		}
+		
+		zeraCasas();
 		
 		if ((auxi = i + 1) < 8) {
-			if (posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
+			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
 				casas[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxi = i - 1) >= 0) {
-			if (posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
+			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
 				casas[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
-				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
-				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
+				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
 					casas[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxj = j - 1) >= 0) {
-			if (posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor() ) {
+			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1 ) {
 				casas[i][auxj] = 1;
 			}
 		}
 		
 		if ((auxj = j + 1) < 8) {
-			if (posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
+			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1) {
 				casas[i][auxj] = 1;
 			}
 		}
