@@ -121,8 +121,6 @@ public class Tabuleiro extends JComponent {
 		alturaPeça = 11*alturaCasa/20;
 		Color casaVerde = new Color(41, 198, 47, 150);
 		
-		System.out.println(larguraCasa+", "+alturaCasa);
-		
 		for(int i=0; i<8; i++) {
 			posicaoY = alturaCasa*i;
 			for(int j=0; j<8; j++) {

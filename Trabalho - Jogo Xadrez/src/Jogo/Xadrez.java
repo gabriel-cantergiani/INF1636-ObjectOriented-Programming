@@ -64,8 +64,6 @@ public class Xadrez extends JFrame {
 	public void Recebe_Clique(int i, int j) {
 		
 		if(posicoes[i][j] != null) {		// peça foi selecionada para começar uma jogada
-			if(posicoes[i][j]!=peça)
-				zeraCasas();
 			Peça_Selecionada(i,j);
 		}
 		else if(posicoes[i][j] == null && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
@@ -80,6 +78,7 @@ public class Xadrez extends JFrame {
 	public void Peça_Selecionada(int i, int j) {
 		
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
+			zeraCasas();
 			iOrigem = i;
 			jOrigem = j;
 			peça = posicoes[i][j];
@@ -87,7 +86,12 @@ public class Xadrez extends JFrame {
 			novaMovimentacao(i,j);
 		}
 		else {								// Peça da outra cor foi selecionada. Verifica se a captura é viável...
-			return;	// falta implementar captura de outra peça
+			if(casas[i][j] == 1) {
+				posicoes[iOrigem][jOrigem] = null;
+				posicoes[i][j] = peça;
+			}
+			zeraCasas();
+			selecao=0;
 		}
 	}
 
