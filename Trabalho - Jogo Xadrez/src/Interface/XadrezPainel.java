@@ -45,9 +45,9 @@ public class XadrezPainel extends JPanel{
 						
 				
 				if(casas[i][j]==1) {
-					//g2d.setPaint(casaVerde);
+					g2d.setPaint(casaVerde);
 					//Rect2D.setRect(posicaoX, posicaoY, larguraCasa, alturaCasa);
-					g2d.setPaint(Color.green);
+					//g2d.setPaint(Color.green);
 					Rect2D.setRect(posicaoX+((larguraCasa)/10), posicaoY+((alturaCasa)/10), 4*larguraCasa/5, 4*alturaCasa/5);
 					g2d.fill(Rect2D);
 				}

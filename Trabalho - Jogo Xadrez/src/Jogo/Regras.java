@@ -12,6 +12,7 @@ public class Regras {
 	private Peça peça;
 	private int iOrigem, jOrigem;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
+	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
 	
 	public Regras(int[][] c, Peça[][] p, Tabuleiro t) {
@@ -22,6 +23,7 @@ public class Regras {
 	
 	protected void Peça_Selecionada(int i, int j) {
 		
+		if (posicoes[i][j].getCor() != vez && selecao == 0) return;
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
 			tab.zeraCasas();
 			iOrigem = i;
@@ -34,9 +36,11 @@ public class Regras {
 			if(casas[i][j] == 1) {
 				posicoes[iOrigem][jOrigem] = null;
 				posicoes[i][j] = peça;
+				if (vez == 0) vez = 1;
+				else if (vez == 1) vez = 0;
 			}
 			tab.zeraCasas();
-			selecao=0;
+			selecao = 0;
 		}
 	}
 
@@ -48,6 +52,8 @@ public class Regras {
 		if(casas[i][j] == 1) {	// casa é válida -> efetua a movimentação
 			posicoes[iOrigem][jOrigem] = null;
 			posicoes[i][j] = peça;
+			if (vez == 0) vez = 1;
+			else if (vez == 1) vez = 0;
 		}
 		tab.zeraCasas();
 		selecao = 0;
