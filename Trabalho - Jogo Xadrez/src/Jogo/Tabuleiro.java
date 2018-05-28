@@ -1,7 +1,6 @@
 package Jogo;
 
-import Peça.Peça;
-import Peça.tipoPeça;
+import Peça.*;
 import java.awt.*;
 
 public class Tabuleiro implements Observado{
@@ -14,7 +13,6 @@ public class Tabuleiro implements Observado{
 	
 	private Tabuleiro() {
 		zeraCasas();
-		criaPeças();
 		inicializaTabuleiro();
 	}
 	
@@ -32,93 +30,33 @@ public class Tabuleiro implements Observado{
 		}
 	}
 	
-	private void criaPeças() {
-
-		for(int i=0; i<8; i++) {
-			posicoes[i] = new Peça[8];
-			for(int j=0; j<8; j++)
-				if(i>=2 && i<=5)
-					posicoes[i][j] = null;
-				else
-					posicoes[i][j] = new Peça();
-		}
-		
-	}
-	
 	private void inicializaTabuleiro() {
 		
 		for(int i=0; i<8; i++) {
-			for(int j=0; j<8; j++) {
-				switch(i){
-					case 0:{
-						if(j==0 || j==7) {
-							posicoes[i][j].setTipo(tipoPeça.Torre);
-							posicoes[i][j].setImg("imagens/Pecas_2/PurpleR.png");
-						}
-						else if(j==1 || j==6) {
-							posicoes[i][j].setTipo(tipoPeça.Cavalo);
-							posicoes[i][j].setImg("imagens/Pecas_2/PurpleN.png");
-						}
-						else if(j==2 || j==5) {
-							posicoes[i][j].setTipo(tipoPeça.Bispo);
-							posicoes[i][j].setImg("imagens/Pecas_2/PurpleB.png");
-						}
-						else if(j==3) {
-							posicoes[i][j].setTipo(tipoPeça.Rainha);
-							posicoes[i][j].setImg("imagens/Pecas_2/PurpleQ.png");
-						}
-						else {
-							posicoes[i][j].setTipo(tipoPeça.Rei);
-							posicoes[i][j].setImg("imagens/Pecas_2/PurpleK.png");
-						}
-						posicoes[i][j].setCor(1);
-						break;
-					}
-					case 1:{
-						posicoes[i][j].setTipo(tipoPeça.Peao);
-						posicoes[i][j].setImg("imagens/Pecas_2/PurpleP.png");
-						posicoes[i][j].setCor(1);
-						break;
-					}
-					case 6:{
-						posicoes[i][j].setTipo(tipoPeça.Peao);
-						posicoes[i][j].setImg("imagens/Pecas_2/CyanP.png");
-						posicoes[i][j].setCor(0);
-						break;
-					}
-					case 7:{
-						if(j==0 || j==7) {
-							posicoes[i][j].setTipo(tipoPeça.Torre);
-							posicoes[i][j].setImg("imagens/Pecas_2/CyanR.png");
-						}
-						else if(j==1 || j==6) {
-							posicoes[i][j].setTipo(tipoPeça.Cavalo);
-							posicoes[i][j].setImg("imagens/Pecas_2/CyanN.png");
-						}
-						else if(j==2 || j==5) {
-							posicoes[i][j].setTipo(tipoPeça.Bispo);
-							posicoes[i][j].setImg("imagens/Pecas_2/CyanB.png");
-						}
-						else if(j==3) {
-							posicoes[i][j].setTipo(tipoPeça.Rainha);
-							posicoes[i][j].setImg("imagens/Pecas_2/CyanQ.png");
-						}
-						else {
-							posicoes[i][j].setTipo(tipoPeça.Rei);
-							posicoes[i][j].setImg("imagens/Pecas_2/CyanK.png");
-						}
-						posicoes[i][j].setCor(0);
-						break;
-					}
-				
-				}
-					
-			}
-		
+			posicoes[i] = new Peça[8];
 		}
 		
-		// end of loop
-
+		posicoes[0][0] = new Torre(1); posicoes[7][0] = new Torre(0);
+		posicoes[0][1] = new Cavalo(1); posicoes[7][1] = new Cavalo(0);
+		posicoes[0][2] = new Bispo(1);  posicoes[7][2] = new Bispo(0);
+		posicoes[0][3] = new Rainha(1); posicoes [7][3] = new Rainha(0);
+		
+		posicoes[0][4] = new Rei(1);    posicoes [7][4] = new Rei(0);
+		posicoes[0][5] = new Bispo(1);  posicoes[7][5] = new Bispo(0);
+		posicoes[0][6] = new Cavalo(1); posicoes[7][6] = new Cavalo(0);
+		posicoes[0][7] = new Torre(1);  posicoes[7][7] = new Torre(0);
+		
+		
+		for(int i=1; i<7; i++) {
+			for(int j=0; j<8; j++) {
+				if(i == 1)
+					posicoes[i][j] = new Peão(1);
+				else if(i == 6)
+					posicoes[i][j] = new Peão(0);
+				else
+					posicoes[i][j] = null;
+			}
+		}
 	}
 	
 	public Peça[][] getPeças(){
@@ -134,8 +72,9 @@ public class Tabuleiro implements Observado{
 		if(posicoes[i][j] != null) {		// peça foi selecionada para começar uma jogada
 			regras.Peça_Selecionada(i,j);
 		}
-		else if(posicoes[i][j] == null)// && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
+		else if(posicoes[i][j] == null)	// casa vazia foi selecionada após a seleção de uma peça
 			regras.Casa_Selecionada(i,j);
+		
 		// Nenhum dos casos acima, ignora o clique
 		
 		obs.notify(this); // mensagem para o o Painel atualizar (repaint() )
