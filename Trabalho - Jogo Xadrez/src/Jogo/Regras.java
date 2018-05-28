@@ -1,85 +1,31 @@
 package Jogo;
 
-import javax.swing.*;
-
-import Listeners.TratadorClique;
 import Peça.Peça;
 import Peça.tipoPeça;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-
-public class Xadrez extends JFrame {
-
-	public Tabuleiro tabuleiro;
-	private int[][] casas = new int[8][8];
-	private Peça[][] posicoes = new Peça[8][8];
+public class Regras {
+	
+	private Tabuleiro tab;
+	private int[][] casas;
+	private Peça[][] posicoes;
 	private int selecao = 0; // selecao = 0 -> nada selecionado,  selecao = 1 -> peça selecionada
 	private Peça peça;
 	private int iOrigem, jOrigem;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
-	public Xadrez(String titulo) {
-		
-		super(titulo);
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Dimension ss = tk.getScreenSize();
-		
-		criaPeças();
-		zeraCasas();
-		
-		tabuleiro = new Tabuleiro(posicoes, casas);
-		
-		tabuleiro.addMouseListener(new TratadorClique(this, tabuleiro));
-		this.getContentPane().setBackground(Color.gray);
-		this.setLocation(ss.width/4, (2*ss.height-ss.width)/4);
-		this.setSize(ss.width/2, ss.width/2);
-		
-		this.getContentPane().add(tabuleiro);
-		
-		
-	}
-
-	private void zeraCasas () {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j< 8; j++) {
-				this.casas[i][j] = 0;
-			}
-		}
+	
+	public Regras(int[][] c, Peça[][] p, Tabuleiro t) {
+		casas = c;
+		posicoes = p;
+		tab = t;
 	}
 	
-	private void criaPeças() {
-
-		for(int i=0; i<8; i++) {
-			posicoes[i] = new Peça[8];
-			for(int j=0; j<8; j++)
-				if(i>=2 && i<=5)
-					posicoes[i][j] = null;
-				else
-					posicoes[i][j] = new Peça();
-		}
+	protected void Peça_Selecionada(int i, int j) {
 		
-	}
-	
-	public void Recebe_Clique(int i, int j) {
-		
-		if(posicoes[i][j] != null && (posicoes[i][j].getCor() == vez || selecao == 1)) {		// peça foi selecionada para começar uma jogada
-			Peça_Selecionada(i,j);
-		}
-		else if(posicoes[i][j] == null && selecao==1)	// casa vazia foi selecionada após a seleção de uma peça
-			Casa_Selecionada(i,j);
-		// Nenhum dos casos acima, ignora o clique
-		
-		tabuleiro.repaint();
-		return;	
-			
-	}
-	
-	public void Peça_Selecionada(int i, int j) {
-		
+		if (posicoes[i][j].getCor() != vez && selecao == 0) return;
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
-			zeraCasas();
+			tab.zeraCasas();
 			iOrigem = i;
 			jOrigem = j;
 			peça = posicoes[i][j];
@@ -93,12 +39,15 @@ public class Xadrez extends JFrame {
 				if (vez == 0) vez = 1;
 				else if (vez == 1) vez = 0;
 			}
-			zeraCasas();
+			tab.zeraCasas();
 			selecao = 0;
 		}
 	}
 
-	public void Casa_Selecionada(int i, int j) {
+	protected void Casa_Selecionada(int i, int j) {
+		
+		if(selecao == 0)
+			return;
 		
 		if(casas[i][j] == 1) {	// casa é válida -> efetua a movimentação
 			posicoes[iOrigem][jOrigem] = null;
@@ -106,11 +55,11 @@ public class Xadrez extends JFrame {
 			if (vez == 0) vez = 1;
 			else if (vez == 1) vez = 0;
 		}
-		zeraCasas();
+		tab.zeraCasas();
 		selecao = 0;
 	}
 	
-	public void novaMovimentacao (int i, int j) {
+	private void novaMovimentacao (int i, int j) {
 		
 		if (eMovRei == 1) {
 			if (posicoes[i][j].getTipo() == tipoPeça.Peao) movimentaPeaoCaptura(i,j);
@@ -126,9 +75,10 @@ public class Xadrez extends JFrame {
 		if (posicoes[i][j].getTipo() == tipoPeça.Cavalo) movimentaCavalo(i,j);
 		if (posicoes[i][j].getTipo() == tipoPeça.Rainha) movimentaRainha(i,j);
 		
-	}
 	
-	public void movimentaTorre (int i, int j){
+}
+
+	private void movimentaTorre (int i, int j){
 		
 		int auxi, auxj;
 		
@@ -193,7 +143,7 @@ public class Xadrez extends JFrame {
 		}
 	}
 	
-	public void movimentaBispo (int i, int j) {
+	private void movimentaBispo (int i, int j) {
 		
 		int auxi, auxj;
 		
@@ -258,7 +208,7 @@ public class Xadrez extends JFrame {
 		}
 	}
 	
-	public void movimentaCavalo (int i, int j) {
+	private void movimentaCavalo (int i, int j) {
 		
 		int auxi, auxj;
 		
@@ -324,12 +274,12 @@ public class Xadrez extends JFrame {
 		
 	}
 
-	public void movimentaRainha (int i, int j) {
+	private void movimentaRainha (int i, int j) {
 		movimentaTorre(i,j);
 		movimentaBispo(i,j);
 	}
 	
-	public void movimentaPeao (int i, int j) {
+	private void movimentaPeao (int i, int j) {
 		
 		if (i == 6 && posicoes[i][j].getCor() == 0 && posicoes[i-2][j] == null && posicoes[i-1][j] == null) casas[i-2][j] = 1;
 		if (i == 1 && posicoes[i][j].getCor() == 1 && posicoes[i+2][j] == null && posicoes[i+1][j] == null) casas[i+2][j] = 1;
@@ -342,14 +292,14 @@ public class Xadrez extends JFrame {
 		
 	}
 	
-	public void movimentaPeaoCaptura (int i, int j) {
+	private void movimentaPeaoCaptura (int i, int j) {
 		if (posicoes[i][j].getCor() == 0 && j>0) casas[i-1][j-1] = 1;
 		if (posicoes[i][j].getCor() == 0 && j<7) casas[i-1][j+1] = 1;
 		if (posicoes[i][j].getCor() == 1 && j>0) casas[i+1][j-1] = 1;
 		if (posicoes[i][j].getCor() == 1 && j<7) casas[i+1][j+1] = 1;
 	}
 	
-	public void movimentaRei (int i, int j) {
+	private void movimentaRei (int i, int j) {
 		
 		int auxi, auxj;
 		int[][] auxRei = new int[8][8];
@@ -374,7 +324,7 @@ public class Xadrez extends JFrame {
 			}
 		}
 		
-		zeraCasas();
+		tab.zeraCasas();
 		
 		if ((auxi = i + 1) < 8) {
 			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
@@ -420,4 +370,5 @@ public class Xadrez extends JFrame {
 			}
 		}
 	}
+	
 }
