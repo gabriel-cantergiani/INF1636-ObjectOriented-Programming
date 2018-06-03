@@ -3,16 +3,16 @@ package Listeners;
 import java.awt.*;
 import java.awt.event.*;
 
-import Jogo.Tabuleiro;
+import Jogo.Controlador;
 import Interface.XadrezFrame;
 
 public class TratadorClique extends MouseAdapter implements MouseListener{
 	
-	Tabuleiro tab;
+	Controlador controlador;
 	XadrezFrame frame;
 	
-	public TratadorClique(Tabuleiro tabuleiro, XadrezFrame f) {
-		tab = tabuleiro;
+	public TratadorClique(Controlador cont, XadrezFrame f) {
+		controlador = cont;
 		frame = f;
 	}
 	
@@ -41,7 +41,7 @@ public class TratadorClique extends MouseAdapter implements MouseListener{
 			
 			System.out.println("Clique na posicao [i][j] = ["+i+"]["+j+"]");
 			
-			tab.Recebe_Clique(i, j);
+			controlador.Recebe_Indices(i, j);
 			
 		}
 		

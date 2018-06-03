@@ -4,10 +4,11 @@ import java.awt.geom.*;
 import java.awt.*;
 import javax.swing.*;
 import Peça.Peça;
+import Jogo.Controlador;
 import Jogo.Observado;
 import Jogo.Observador;
 
-public class XadrezPainel extends JPanel{
+public class XadrezPainel extends JPanel implements Observador{
 
 	private Rectangle2D Rect2D = new Rectangle2D.Double();
 	private int larguraCasa, alturaCasa;
@@ -16,11 +17,16 @@ public class XadrezPainel extends JPanel{
 	private Color cor, casaVerde = new Color(41, 198, 47, 150);
 	private int[][] casas;
 	private Peça[][] pos;
+	private Observado observado;
 
 	
-	public XadrezPainel(int[][] c, Peça[][] posicao) {
-		casas = c;
-		pos = posicao;
+	public XadrezPainel() {
+		
+		Controlador.getControlador().registra(this);
+		observado = Controlador.getObservado();
+		
+		casas = observado.getCasas();
+		pos = observado.getPeças();
 		
 	}
 	
@@ -68,4 +74,8 @@ public class XadrezPainel extends JPanel{
 		
 	}
 
+	public void notify(Observado o){
+		repaint();
+	}
+	
 }

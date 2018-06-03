@@ -88,6 +88,6 @@ public class Tabuleiro implements Observado{
 	
 	public void remove(Observador o) {
 		
-		
 	}
+
 }
