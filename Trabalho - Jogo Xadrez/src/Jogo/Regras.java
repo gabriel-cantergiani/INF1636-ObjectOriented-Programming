@@ -14,6 +14,16 @@ public class Regras {
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
+	// auxiliares para realizar os roques
+	// 0 -> não foi movimentado nenhuma vez, 1 -> ja foi movimentado
+	
+	private int movReiBranco = 0;
+	private int movReiPreto = 0;
+	private int movTorreBrancaDir = 0;
+	private int movTorreBrancaEsq = 0;
+	private int movTorrePretaDir = 0;
+	private int movTorrePretaEsq = 0;
+	
 	
 	public Regras(int[][] c, Peça[][] p, Tabuleiro t) {
 		casas = c;
@@ -24,6 +34,7 @@ public class Regras {
 	protected void Peça_Selecionada(int i, int j) {
 		
 		if (posicoes[i][j].getCor() != vez && selecao == 0) return;
+		
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
 			tab.zeraCasas();
 			iOrigem = i;
@@ -36,6 +47,10 @@ public class Regras {
 			if(casas[i][j] == 1) {
 				posicoes[iOrigem][jOrigem] = null;
 				posicoes[i][j] = peça;
+				
+				if (peça.getTipo() == tipoPeça.Torre || peça.getTipo() == tipoPeça.Rei) 
+					verificaMovReiTorre();
+				
 				if (vez == 0) vez = 1;
 				else if (vez == 1) vez = 0;
 			}
@@ -52,6 +67,10 @@ public class Regras {
 		if(casas[i][j] == 1) {	// casa é válida -> efetua a movimentação
 			posicoes[iOrigem][jOrigem] = null;
 			posicoes[i][j] = peça;
+			
+			if (peça.getTipo() == tipoPeça.Torre || peça.getTipo() == tipoPeça.Rei) 
+				verificaMovReiTorre();
+			
 			if (vez == 0) vez = 1;
 			else if (vez == 1) vez = 0;
 		}
@@ -76,7 +95,16 @@ public class Regras {
 		if (posicoes[i][j].getTipo() == tipoPeça.Rainha) movimentaRainha(i,j);
 		
 	
-}
+	}
+	
+	private void verificaMovReiTorre () {
+		if (posicoes[7][7].getTipo() != tipoPeça.Torre || posicoes[7][7].getCor() != 0) movTorreBrancaDir = 1;
+		if (posicoes[7][0].getTipo() != tipoPeça.Torre || posicoes[7][0].getCor() != 0) movTorreBrancaEsq = 1;
+		if (posicoes[0][7].getTipo() != tipoPeça.Torre || posicoes[0][7].getCor() != 1) movTorrePretaDir = 1;
+		if (posicoes[0][0].getTipo() != tipoPeça.Torre || posicoes[0][0].getCor() != 1) movTorrePretaEsq = 1;
+		if (posicoes[7][4].getTipo() != tipoPeça.Rei || posicoes[7][4].getCor() != 0) movReiBranco = 1;
+		if (posicoes[0][4].getTipo() != tipoPeça.Rei || posicoes[0][4].getCor() != 1) movReiPreto = 1;
+	}
 
 	private void movimentaTorre (int i, int j){
 		

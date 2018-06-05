@@ -69,9 +69,9 @@ public class Tabuleiro implements Observado{
 	
 	public void Recebe_Clique(int i, int j) {
 		
-		if(posicoes[i][j] != null) {		// peça foi selecionada para começar uma jogada
+		if(posicoes[i][j] != null)   	// peça foi selecionada para começar uma jogada
 			regras.Peça_Selecionada(i,j);
-		}
+		
 		else if(posicoes[i][j] == null)	// casa vazia foi selecionada após a seleção de uma peça
 			regras.Casa_Selecionada(i,j);
 		
