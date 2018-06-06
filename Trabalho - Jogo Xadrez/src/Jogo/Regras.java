@@ -127,8 +127,6 @@ public class Regras {
 			
 			if (movTorreBrancaEsq == 0 && j == 0) {
 				
-				
-				
 				if (posicoes[7][1] == null && posicoes[7][2] == null && posicoes[7][3] == null && casas[7][4] == 0 && casas[7][3] == 0 && casas[7][2] == 0) {
 					posicoes[7][2] = posicoes[7][4];
 					posicoes[7][3] = posicoes[7][0];
