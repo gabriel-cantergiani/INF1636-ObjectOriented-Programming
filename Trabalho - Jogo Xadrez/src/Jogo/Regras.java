@@ -112,57 +112,92 @@ public class Regras {
 	
 	private boolean verificaRoque(int j, int cor) {
 		if (cor == 0) {
+			
+			eMovRei = 1;
+				
+			for (int auxi = 0; auxi < 8; auxi++) {
+				for (int auxj = 0; auxj < 8; auxj++) {
+					if (posicoes[auxi][auxj] != null && posicoes[auxi][auxj].getCor() != 0) {
+						novaMovimentacao(auxi,auxj);
+					}
+				}
+			}
+				
+			eMovRei = 0;
+			
 			if (movTorreBrancaEsq == 0 && j == 0) {
-				if (posicoes[7][1] == null && posicoes[7][2] == null && posicoes[7][3] == null) {
+				
+				
+				
+				if (posicoes[7][1] == null && posicoes[7][2] == null && posicoes[7][3] == null && casas[7][4] == 0 && casas[7][3] == 0 && casas[7][2] == 0) {
 					posicoes[7][2] = posicoes[7][4];
 					posicoes[7][3] = posicoes[7][0];
 					posicoes[7][4] = null;
 					posicoes[7][0] = null;
 					movReiBranco = 1;
 					movTorreBrancaEsq = 1;
+					tab.zeraCasas();
 					return true;
 				}
+				
 			}
 			
 			if (movTorreBrancaDir == 0 && j == 7) {
-				if (posicoes[7][6] == null && posicoes[7][5] == null) {
+				if (posicoes[7][6] == null && posicoes[7][5] == null && casas[7][4] == 0 && casas[7][5] == 0 && casas[7][6] == 0) {
 					posicoes[7][5] = posicoes[7][7];
 					posicoes[7][6] = posicoes[7][4];
 					posicoes[7][7] = null;
 					posicoes[7][4] = null;
 					movReiBranco = 1;
 					movTorreBrancaDir = 1;
+					tab.zeraCasas();
 					return true;
 				}
 			}
 		}
 		
 		if (cor == 1) {
+			
+			eMovRei = 1;
+			
+			for (int auxi = 0; auxi < 8; auxi++) {
+				for (int auxj = 0; auxj < 8; auxj++) {
+					if (posicoes[auxi][auxj] != null && posicoes[auxi][auxj].getCor() != 1) {
+						novaMovimentacao(auxi,auxj);
+					}
+				}
+			}
+				
+			eMovRei = 0;
+			
 			if (movTorrePretaEsq == 0 && j == 0) {
-				if (posicoes[0][1] == null && posicoes[0][2] == null && posicoes[0][3] == null) {
+				if (posicoes[0][1] == null && posicoes[0][2] == null && posicoes[0][3] == null && casas[0][4] == 0 && casas[0][3] == 0 && casas[0][2] == 0) {
 					posicoes[0][2] = posicoes[0][4];
 					posicoes[0][3] = posicoes[0][0];
 					posicoes[0][4] = null;
 					posicoes[0][0] = null;
 					movReiPreto = 1;
 					movTorrePretaEsq = 1;
+					tab.zeraCasas();
 					return true;
 				}
 			}
 			
 			if (movTorrePretaDir == 0 && j == 7) {
-				if (posicoes[0][6] == null && posicoes[0][5] == null) {
+				if (posicoes[0][6] == null && posicoes[0][5] == null && casas[0][4] == 0 && casas[0][5] == 0 && casas[0][6] == 0) {
 					posicoes[0][5] = posicoes[0][7];
 					posicoes[0][6] = posicoes[0][4];
 					posicoes[0][7] = null;
 					posicoes[0][4] = null;
 					movReiPreto = 1;
 					movTorrePretaDir = 1;
+					tab.zeraCasas();
 					return true;
 				}
 			}
 		}
 		
+		tab.zeraCasas();
 		return false;
 	}
 	
