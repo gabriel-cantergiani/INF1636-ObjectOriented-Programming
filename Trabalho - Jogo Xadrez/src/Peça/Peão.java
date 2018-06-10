@@ -20,9 +20,7 @@ public class Peão extends Peça{
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
-		
-		this.tipo = tipoPeça.Peao;
-		
+
 	}
 	
 	

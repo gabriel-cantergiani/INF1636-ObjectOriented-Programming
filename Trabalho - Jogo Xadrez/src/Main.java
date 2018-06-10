@@ -1,4 +1,4 @@
-import Interface.XadrezFrame;
+import Interface.*;
 import Jogo.*;
 import Listeners.*;
 

@@ -19,9 +19,7 @@ public class Torre extends Peça{
 			System.out.println(e.getMessage());
 			System.exit(1);
 		}
-		
-		this.tipo = tipoPeça.Torre;
-		
+
 	}
 	
 	

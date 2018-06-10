@@ -7,6 +7,7 @@ import Peça.Peça;
 import Jogo.Controlador;
 import Jogo.Observado;
 import Jogo.Observador;
+import Listeners.*;
 
 public class XadrezPainel extends JPanel implements Observador{
 
@@ -39,6 +40,8 @@ public class XadrezPainel extends JPanel implements Observador{
 		larguraPeça = 11*larguraCasa/20;
 		alturaPeça = 11*alturaCasa/20;
 	
+		
+		System.out.println(larguraCasa);
 		
 		for(int i=0; i<8; i++) {
 			posicaoY = alturaCasa*i;
@@ -74,8 +77,49 @@ public class XadrezPainel extends JPanel implements Observador{
 		
 	}
 
-	public void notify(Observado o){
-		repaint();
+	public void notify(Observado o, int i){
+		if(i==1)
+			repaint();
+		else if(i==2)
+			mostraMenuSelecao();
 	}
 	
+	public void mostraMenuSelecao() {
+		
+		JPopupMenu menu = new JPopupMenu("Promoção de Peão");
+		double larguraItem = this.getWidth()/(1.6);
+		double alturaItem = this.getHeight()/(11.7);
+		TratadorPromocao tratador = new TratadorPromocao();
+		
+		Font fonte = new Font("SERIF",Font.BOLD, 25);
+		JMenuItem label = new JMenuItem("Seleciona uma peça para promover o Peão:");
+		JRadioButtonMenuItem botTorre = new JRadioButtonMenuItem("Torre");
+		JRadioButtonMenuItem botCavalo = new JRadioButtonMenuItem("Cavalo");
+		JRadioButtonMenuItem botBispo = new JRadioButtonMenuItem("Bispo");
+		JRadioButtonMenuItem botRainha = new JRadioButtonMenuItem("Rainha");
+		
+		label.setPreferredSize(new Dimension((int)larguraItem,(int)alturaItem));
+		botTorre.setPreferredSize(new Dimension((int)larguraItem,(int)alturaItem));
+		botCavalo.setPreferredSize(new Dimension((int)larguraItem,(int)alturaItem));
+		botBispo.setPreferredSize(new Dimension((int)larguraItem,(int)alturaItem));
+		botRainha.setPreferredSize(new Dimension((int)larguraItem,(int)alturaItem));
+		label.setFont(fonte);
+		botTorre.setFont(fonte);
+		botCavalo.setFont(fonte);
+		botBispo.setFont(fonte);
+		botRainha.setFont(fonte);
+		
+		
+		botTorre.addActionListener(tratador);
+		botCavalo.addActionListener(tratador);
+		botBispo.addActionListener(tratador);
+		botRainha.addActionListener(tratador);
+		
+		menu.add(label);
+		menu.add(botTorre);
+		menu.add(botCavalo);
+		menu.add(botBispo);
+		menu.add(botRainha);
+		menu.show(this, (int)(this.getWidth()-larguraItem)/2, (int)(this.getHeight()-5*alturaItem)/2);
+	}
 }

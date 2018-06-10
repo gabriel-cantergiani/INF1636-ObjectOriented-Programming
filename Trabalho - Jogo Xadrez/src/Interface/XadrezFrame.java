@@ -24,8 +24,8 @@ public class XadrezFrame extends JFrame{
 		this.setLocation(ss.width/4, (2*ss.height-ss.width)/4);
 		this.setSize(ss.width/2, ss.width/2);
 		this.getContentPane().add(painel);
-		
 	}
+	
 	
 	
 }

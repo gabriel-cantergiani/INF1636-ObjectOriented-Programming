@@ -74,13 +74,25 @@ public class Tabuleiro implements Observado{
 		
 		else if(posicoes[i][j] == null)	// casa vazia foi selecionada após a seleção de uma peça
 			regras.Casa_Selecionada(i,j);
+	
+		else							// Nenhum dos casos acima, ignora o clique
+			return;
 		
-		// Nenhum dos casos acima, ignora o clique
 		
-		obs.notify(this); // mensagem para o o Painel atualizar (repaint() )
+		obs.notify(this,1); // mensagem para o o Painel atualizar (repaint() )
 		return;	
 			
 	}
+	
+	protected void NotificaPromocao() {
+		obs.notify(this,2);
+	}
+	
+	public void EfetuaPromocaoPeao(String str) {
+		regras.PromovePeao(str);
+		obs.notify(this,1);		
+	}
+	
 	
 	public void add(Observador o) {
 		obs = o;

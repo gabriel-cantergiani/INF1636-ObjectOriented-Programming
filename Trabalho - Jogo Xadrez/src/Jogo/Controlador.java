@@ -29,4 +29,8 @@ public class Controlador {
 		Tabuleiro.getTabuleiro().Recebe_Clique(i, j);
 	}
 	
+	public void Recebe_Promocao(String str) {
+		Tabuleiro.getTabuleiro().EfetuaPromocaoPeao(str);
+	}
+	
 }

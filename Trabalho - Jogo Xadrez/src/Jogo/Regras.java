@@ -1,7 +1,6 @@
 package Jogo;
 
-import Peça.Peça;
-import Peça.tipoPeça;
+import Peça.*;
 
 public class Regras {
 	
@@ -10,7 +9,7 @@ public class Regras {
 	private Peça[][] posicoes;
 	private int selecao = 0; // selecao = 0 -> nada selecionado,  selecao = 1 -> peça selecionada
 	private Peça peça;
-	private int iOrigem, jOrigem;	// indices de origem da peça a ser movimentada
+	private int iOrigem, jOrigem, iTroca, jTroca;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
@@ -41,7 +40,7 @@ public class Regras {
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
 			tab.zeraCasas();
 			
-			if (posicoes[i][j].getTipo() == tipoPeça.Torre && peça.getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
+			if (posicoes[i][j] instanceof Torre && peça.getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
 				if (verificaRoque(j,0) == true) {
 					possivelRoqueBranco = 0;
 					selecao = 0;
@@ -50,7 +49,7 @@ public class Regras {
 				}
 			}
 			
-			if (posicoes[i][j].getTipo() == tipoPeça.Torre && peça.getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
+			if (posicoes[i][j] instanceof Torre && peça.getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
 				if (verificaRoque(j,1) == true) {
 					possivelRoquePreto = 0;
 					selecao = 0;
@@ -68,10 +67,10 @@ public class Regras {
 			selecao = 1;
 			novaMovimentacao(i,j);
 			
-			if (peça.getTipo() == tipoPeça.Rei && peça.getCor() == 0 && movReiBranco == 0)
+			if (peça instanceof Rei && peça.getCor() == 0 && movReiBranco == 0)
 				possivelRoqueBranco = 1;
 			
-			if (peça.getTipo() == tipoPeça.Rei && peça.getCor() == 1 && movReiPreto == 0)
+			if (peça instanceof Rei && peça.getCor() == 1 && movReiPreto == 0)
 				possivelRoquePreto = 1;
 			
 		}
@@ -80,7 +79,7 @@ public class Regras {
 				posicoes[iOrigem][jOrigem] = null;
 				posicoes[i][j] = peça;
 				
-				if (peça.getTipo() == tipoPeça.Torre || peça.getTipo() == tipoPeça.Rei) 
+				if (peça instanceof Torre || peça instanceof Rei) 
 					verificaMovReiTorre();
 				
 				if (vez == 0) vez = 1;
@@ -100,12 +99,17 @@ public class Regras {
 			posicoes[iOrigem][jOrigem] = null;
 			posicoes[i][j] = peça;
 			
-			if (peça.getTipo() == tipoPeça.Torre || peça.getTipo() == tipoPeça.Rei) 
+			if ( peça instanceof Torre || peça instanceof Rei) 
 				verificaMovReiTorre();
+			else if( peça instanceof Peão)
+				VerificaPromocaoPeao(i, j);
 			
-			if (vez == 0) vez = 1;
-			else if (vez == 1) vez = 0;
+			if (vez == 0)
+				vez = 1;
+			else
+				vez = 0;
 		}
+		
 		tab.zeraCasas();
 		selecao = 0;
 	}
@@ -202,29 +206,29 @@ public class Regras {
 	private void novaMovimentacao (int i, int j) {
 		
 		if (eMovRei == 1) {
-			if (posicoes[i][j].getTipo() == tipoPeça.Peao) movimentaPeaoCaptura(i,j);
+			if (posicoes[i][j] instanceof Peão) movimentaPeaoCaptura(i,j);
 		}
 		
 		else {
-			if (posicoes[i][j].getTipo() == tipoPeça.Peao) movimentaPeao(i,j);
-			if (posicoes[i][j].getTipo() == tipoPeça.Rei) movimentaRei(i,j);
+			if (posicoes[i][j] instanceof Peão) movimentaPeao(i,j);
+			if (posicoes[i][j] instanceof Rei) movimentaRei(i,j);
 		}
 		
-		if (posicoes[i][j].getTipo() == tipoPeça.Torre) movimentaTorre(i,j);
-		if (posicoes[i][j].getTipo() == tipoPeça.Bispo) movimentaBispo(i,j);
-		if (posicoes[i][j].getTipo() == tipoPeça.Cavalo) movimentaCavalo(i,j);
-		if (posicoes[i][j].getTipo() == tipoPeça.Rainha) movimentaRainha(i,j);
+		if (posicoes[i][j] instanceof Torre) movimentaTorre(i,j);
+		if (posicoes[i][j] instanceof Bispo) movimentaBispo(i,j);
+		if (posicoes[i][j] instanceof Cavalo) movimentaCavalo(i,j);
+		if (posicoes[i][j] instanceof Rainha) movimentaRainha(i,j);
 		
 	
 	}
 	
 	private void verificaMovReiTorre () {
-		if (posicoes[7][7] == null || posicoes[7][7].getTipo() != tipoPeça.Torre || posicoes[7][7].getCor() != 0) movTorreBrancaDir = 1;
-		if (posicoes[7][0] == null || posicoes[7][0].getTipo() != tipoPeça.Torre || posicoes[7][0].getCor() != 0) movTorreBrancaEsq = 1;
-		if (posicoes[0][7] == null || posicoes[0][7].getTipo() != tipoPeça.Torre || posicoes[0][7].getCor() != 1) movTorrePretaDir = 1;
-		if (posicoes[0][0] == null || posicoes[0][0].getTipo() != tipoPeça.Torre || posicoes[0][0].getCor() != 1) movTorrePretaEsq = 1;
-		if (posicoes[7][4] == null || posicoes[7][4].getTipo() != tipoPeça.Rei || posicoes[7][4].getCor() != 0) movReiBranco = 1;
-		if (posicoes[0][4] == null || posicoes[0][4].getTipo() != tipoPeça.Rei || posicoes[0][4].getCor() != 1) movReiPreto = 1;
+		if (posicoes[7][7] == null || posicoes[7][7] instanceof Torre || posicoes[7][7].getCor() != 0) movTorreBrancaDir = 1;
+		if (posicoes[7][0] == null || posicoes[7][0] instanceof Torre || posicoes[7][0].getCor() != 0) movTorreBrancaEsq = 1;
+		if (posicoes[0][7] == null || posicoes[0][7] instanceof Torre || posicoes[0][7].getCor() != 1) movTorrePretaDir = 1;
+		if (posicoes[0][0] == null || posicoes[0][0] instanceof Torre || posicoes[0][0].getCor() != 1) movTorrePretaEsq = 1;
+		if (posicoes[7][4] == null || posicoes[7][4] instanceof Rei || posicoes[7][4].getCor() != 0) movReiBranco = 1;
+		if (posicoes[0][4] == null || posicoes[0][4] instanceof Rei || posicoes[0][4].getCor() != 1) movReiPreto = 1;
 	}
 
 	private void movimentaTorre (int i, int j){
@@ -427,20 +431,44 @@ public class Regras {
 		movimentaTorre(i,j);
 		movimentaBispo(i,j);
 	}
-	
-	private void movimentaPeao (int i, int j) {
-		
-		if (i == 6 && posicoes[i][j].getCor() == 0 && posicoes[i-2][j] == null && posicoes[i-1][j] == null) casas[i-2][j] = 1;
-		if (i == 1 && posicoes[i][j].getCor() == 1 && posicoes[i+2][j] == null && posicoes[i+1][j] == null) casas[i+2][j] = 1;
-		if (posicoes[i][j].getCor() == 0 && posicoes[i-1][j] == null && (i - 1) >= 0) casas[i-1][j] = 1;
-		if (posicoes[i][j].getCor() == 1 && posicoes[i+1][j] == null && (i + 1) < 8) casas[i+1][j] = 1;
-		if (posicoes[i][j].getCor() == 0 && j>0 && posicoes[i-1][j-1]!=null && posicoes[i-1][j-1].getCor() == 1) casas[i-1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 0 && j<7 && posicoes[i-1][j+1]!=null && posicoes[i-1][j+1].getCor() == 1) casas[i-1][j+1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor() == 0) casas[i+1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor() == 0) casas[i+1][j+1] = 1;
-		
+
+	private void movimentaPeao(int i, int j) {
+		if(posicoes[i][j].getCor() == 0){	// movimenta para cima
+			if(i == 0)	{
+				VerificaPromocaoPeao(i,j);	// promocao de peao
+				return;
+			}
+			if(posicoes[i-1][j] == null)
+				casas[i-1][j] = 1;
+
+			if(i==6 && posicoes[i-2][j] == null)
+				casas[i-2][j] = 1;
+
+			if(j>0 && posicoes[i-1][j-1]!=null && posicoes[i-1][j-1].getCor()==1)
+				casas[i-1][j-1] = 1;
+
+			if(j<7 && posicoes[i-1][j+1]!=null && posicoes[i-1][j+1].getCor()==1)
+				casas[i-1][j+1] = 1;
+		}
+		else{		// movimenta para baixo
+			if(i == 7)	{
+				VerificaPromocaoPeao(i,j);	// promocao de peao
+				return;
+			}
+			if(posicoes[i+1][j] == null)
+				casas[i+1][j] = 1;
+
+			if(i==1 && posicoes[i+2][j] == null)
+				casas[i+2][j] = 1;
+
+			if(j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor()==0)
+				casas[i+1][j-1] = 1;
+
+			if(j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor()==0)
+				casas[i+1][j+1] = 1;
+		}   
 	}
-	
+
 	private void movimentaPeaoCaptura (int i, int j) {
 		if (posicoes[i][j].getCor() == 0 && j>0) casas[i-1][j-1] = 1;
 		if (posicoes[i][j].getCor() == 0 && j<7) casas[i-1][j+1] = 1;
@@ -519,5 +547,41 @@ public class Regras {
 			}
 		}
 	}
+
+	private void VerificaPromocaoPeao(int i, int j) {
+		
+		if((i == 0 || i==7) && posicoes[i][j] instanceof Peão) {
+			iTroca = i;
+			jTroca = j;
+			tab.NotificaPromocao();
+			System.out.println("Peao chegou no fim!");
+		}
+	}
+	
+	protected void PromovePeao(String str) {
+		
+		switch(str) {
+		
+		case "Torre":{
+			posicoes[iTroca][jTroca] = new Torre(posicoes[iTroca][jTroca].getCor());
+			break;
+		}
+		case "Cavalo":{
+			posicoes[iTroca][jTroca] = new Cavalo(posicoes[iTroca][jTroca].getCor());
+			break;
+		}
+		case "Bispo":{
+			posicoes[iTroca][jTroca] = new Bispo(posicoes[iTroca][jTroca].getCor());
+			break;
+		}
+		case "Rainha":{
+			posicoes[iTroca][jTroca] = new Rainha(posicoes[iTroca][jTroca].getCor());
+			break;
+		}
+	}
+		return;
+		
+	}
+	
 	
 }

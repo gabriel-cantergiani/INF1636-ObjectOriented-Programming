@@ -20,8 +20,6 @@ public class Bispo extends Peça{
 			System.exit(1);
 		}
 		
-		this.tipo = tipoPeça.Bispo;
-		
 	}
 	
 }
