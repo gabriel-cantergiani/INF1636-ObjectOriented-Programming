@@ -1,6 +1,6 @@
-import Interface.*;
-import Jogo.*;
-import Listeners.*;
+import Interface.XadrezFrame;
+import Jogo.Controlador;
+import Listeners.TratadorClique;
 
 public class Main {
 	
@@ -8,7 +8,7 @@ public class Main {
 		
 		Controlador controlador = Controlador.getControlador();
 		XadrezFrame xadrez = new XadrezFrame("Xadrez");
-		xadrez.addMouseListener(new TratadorClique(controlador, xadrez));
+		xadrez.addMouseListener(new TratadorClique(xadrez));
 			
 		xadrez.setVisible(true);
 		

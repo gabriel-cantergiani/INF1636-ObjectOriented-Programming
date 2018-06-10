@@ -11,8 +11,8 @@ public class TratadorClique extends MouseAdapter implements MouseListener{
 	Controlador controlador;
 	XadrezFrame frame;
 	
-	public TratadorClique(Controlador cont, XadrezFrame f) {
-		controlador = cont;
+	public TratadorClique(XadrezFrame f) {
+		controlador = Controlador.getControlador();
 		frame = f;
 	}
 	
