@@ -19,15 +19,17 @@ public class XadrezPainel extends JPanel implements Observador{
 	private int[][] casas;
 	private Peça[][] pos;
 	private Observado observado;
-
+	private TratadorPromocao tratador;
 	
 	public XadrezPainel() {
 		
 		Controlador.getControlador().registra(this);
 		observado = Controlador.getObservado();
-		
+	
 		casas = observado.getCasas();
 		pos = observado.getPeças();
+		
+		tratador = new TratadorPromocao();
 		
 	}
 	
@@ -40,8 +42,6 @@ public class XadrezPainel extends JPanel implements Observador{
 		larguraPeça = 11*larguraCasa/20;
 		alturaPeça = 11*alturaCasa/20;
 	
-		
-		System.out.println(larguraCasa);
 		
 		for(int i=0; i<8; i++) {
 			posicaoY = alturaCasa*i;
@@ -78,6 +78,10 @@ public class XadrezPainel extends JPanel implements Observador{
 	}
 
 	public void notify(Observado o, int i){
+		
+		casas = observado.getCasas();
+		pos = observado.getPeças();
+		
 		if(i==1)
 			repaint();
 		else if(i==2)
@@ -89,7 +93,6 @@ public class XadrezPainel extends JPanel implements Observador{
 		JPopupMenu menu = new JPopupMenu("Promoção de Peão");
 		double larguraItem = this.getWidth()/(1.6);
 		double alturaItem = this.getHeight()/(11.7);
-		TratadorPromocao tratador = new TratadorPromocao();
 		
 		Font fonte = new Font("SERIF",Font.BOLD, 25);
 		JMenuItem label = new JMenuItem("Seleciona uma peça para promover o Peão:");

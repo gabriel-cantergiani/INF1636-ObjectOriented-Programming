@@ -13,7 +13,7 @@ public class Regras {
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
-	// auxiliares para realizar os roques
+	// =================================================================  auxiliares para realizar os roques
 	// 0 -> não foi movimentado nenhuma vez, 1 -> ja foi movimentado
 	
 	private int movReiBranco = 0;
@@ -25,6 +25,14 @@ public class Regras {
 	
 	private int possivelRoqueBranco = 0;
 	private int possivelRoquePreto = 0;
+
+	// =======================================================  auxiliares para checar Xeque e XequeMate
+
+	private int emXeque = 0;				
+	private int[][] matXeque = new int[8][8];
+	private int[][] matCorrente;
+
+	// ======================================================
 	
 	
 	public Regras(int[][] c, Peça[][] p, Tabuleiro t) {
@@ -39,33 +47,21 @@ public class Regras {
 		
 		if(selecao == 0 || peça.getCor() == posicoes[i][j].getCor()) { // primeira seleção ou outra peça da mesma cor foi selecionada -> Reinicia a jogada com a nova peça
 			tab.zeraCasas();
-			
-			if (posicoes[i][j] instanceof Torre && peça.getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
-				if (verificaRoque(j,0) == true) {
-					possivelRoqueBranco = 0;
-					selecao = 0;
-					vez = 1;
-					return;
-				}
-			}
-			
-			if (posicoes[i][j] instanceof Torre && peça.getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
-				if (verificaRoque(j,1) == true) {
-					possivelRoquePreto = 0;
-					selecao = 0;
-					vez = 0;
-					return;
-				}
-			}
-			
-			possivelRoqueBranco = 0;
-			possivelRoquePreto = 0;
+
+			if(!verificaPossivelRoque(i,j))
+				return;
 			
 			iOrigem = i;
 			jOrigem = j;
 			peça = posicoes[i][j];
 			selecao = 1;
-			novaMovimentacao(i,j);
+
+			if(emXeque==1){
+				movimentaEmXeque(i,j);
+				emXeque=0;
+			}
+			else
+				novaMovimentacao(i,j);
 			
 			if (peça instanceof Rei && peça.getCor() == 0 && movReiBranco == 0)
 				possivelRoqueBranco = 1;
@@ -84,6 +80,8 @@ public class Regras {
 				
 				if (vez == 0) vez = 1;
 				else if (vez == 1) vez = 0;
+
+				verificaXeque(i,j);
 			}
 			tab.zeraCasas();
 			selecao = 0;
@@ -108,6 +106,8 @@ public class Regras {
 				vez = 1;
 			else
 				vez = 0;
+
+			verificaXeque(i,j);
 		}
 		
 		tab.zeraCasas();
@@ -205,21 +205,27 @@ public class Regras {
 	
 	private void novaMovimentacao (int i, int j) {
 		
+
+		if(emXeque==1)
+			matCorrente = matXeque;
+		else
+			matCorrente = casas;
+
+
 		if (eMovRei == 1) {
-			if (posicoes[i][j] instanceof Peão) movimentaPeaoCaptura(i,j);
+			if (posicoes[i][j] instanceof Peão) movimentaPeaoCaptura(i,j,matCorrente);
 		}
 		
 		else {
-			if (posicoes[i][j] instanceof Peão) movimentaPeao(i,j);
-			if (posicoes[i][j] instanceof Rei) movimentaRei(i,j);
+			if (posicoes[i][j] instanceof Peão) movimentaPeao(i,j,matCorrente);
+			if (posicoes[i][j] instanceof Rei) movimentaRei(i,j,matCorrente);
 		}
 		
-		if (posicoes[i][j] instanceof Torre) movimentaTorre(i,j);
-		if (posicoes[i][j] instanceof Bispo) movimentaBispo(i,j);
-		if (posicoes[i][j] instanceof Cavalo) movimentaCavalo(i,j);
-		if (posicoes[i][j] instanceof Rainha) movimentaRainha(i,j);
+		if (posicoes[i][j] instanceof Torre) movimentaTorre(i,j,matCorrente);
+		if (posicoes[i][j] instanceof Bispo) movimentaBispo(i,j,matCorrente);
+		if (posicoes[i][j] instanceof Cavalo) movimentaCavalo(i,j,matCorrente);
+		if (posicoes[i][j] instanceof Rainha) movimentaRainha(i,j,matCorrente);
 		
-	
 	}
 	
 	private void verificaMovReiTorre () {
@@ -231,224 +237,224 @@ public class Regras {
 		if (posicoes[0][4] == null || posicoes[0][4] instanceof Rei || posicoes[0][4].getCor() != 1) movReiPreto = 1;
 	}
 
-	private void movimentaTorre (int i, int j){
+	private void movimentaTorre (int i, int j, int[][] mat){
 		
 		int auxi, auxj;
 		
 		for (auxi = i+1; auxi < 8; auxi++) {
 			if (posicoes[auxi][j]==null) {
-				casas[auxi][j] = 1;   // é um movimento possível
+				mat[auxi][j] = 1;   // é um movimento possível
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
-				casas[auxi][j] = 1;   // é um movimento possível
+				mat[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][j] = 1;
+				if (eMovRei == 1) mat[auxi][j] = 1;
 				break;
 			}
 		}
 		
 		for (auxi = i-1; auxi >= 0; auxi--) {
 			if (posicoes[auxi][j]==null) {
-				casas[auxi][j] = 1;
+				mat[auxi][j] = 1;
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) {
-				casas[auxi][j] = 1;   // é um movimento possível
+				mat[auxi][j] = 1;   // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][j] = 1;
+				if (eMovRei == 1) mat[auxi][j] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 		
 		for (auxj = j+1; auxj < 8; auxj++) {
 			if(posicoes[i][auxj]==null) {
-				casas[i][auxj] = 1;
+				mat[i][auxj] = 1;
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
-				casas[i][auxj] = 1;  // é um movimento possível
+				mat[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[i][auxj] = 1;
+				if (eMovRei == 1) mat[i][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 		
 		for (auxj = j-1; auxj >= 0; auxj--) {
 			if(posicoes[i][auxj]==null) {
-				casas[i][auxj] = 1;
+				mat[i][auxj] = 1;
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) {
-				casas[i][auxj] = 1;  // é um movimento possível
+				mat[i][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[i][auxj] = 1;
+				if (eMovRei == 1) mat[i][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 	}
 	
-	private void movimentaBispo (int i, int j) {
+	private void movimentaBispo (int i, int j, int[][] mat) {
 		
 		int auxi, auxj;
 		
 		for (auxi = i+1, auxj = j+1; auxi < 8 && auxj < 8; auxi++, auxj++) {
 			if (posicoes[auxi][auxj] == null) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 		
 		for (auxi = i-1, auxj = j-1; auxi >= 0 && auxj >= 0; auxi--, auxj--) {
 			if (posicoes[auxi][auxj] == null) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 		
 		for (auxi = i-1, auxj = j+1; auxi >= 0 && auxj < 8; auxi--, auxj++) {
 			if (posicoes[auxi][auxj] == null) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 		
 		for (auxi = i+1, auxj = j-1; auxi < 8 && auxj >= 0; auxi++, auxj--) {
 			if (posicoes[auxi][auxj] == null) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				continue;
 			}
 			if (posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-				casas[auxi][auxj] = 1;  // é um movimento possível
+				mat[auxi][auxj] = 1;  // é um movimento possível
 				break;
 			}
 			else {
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 				break;  // não é um movimento possível
 			}
 		}
 	}
 	
-	private void movimentaCavalo (int i, int j) {
+	private void movimentaCavalo (int i, int j, int[][] mat) {
 		
 		int auxi, auxj;
 		
 		if ((auxi = i - 1) >= 0) {
 			if ((auxj = j - 2) >= 0) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 			if ((auxj = j + 2) < 8) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 		}
 		
 		if ((auxi = i - 2) >= 0) {
 			if ((auxj = j - 1) >= 0) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 		}
 		
 		if ((auxi = i + 1) < 8) {
 			if ((auxj = j - 2) >= 0) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 			if ((auxj = j + 2) < 8) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 		}
 		
 		if ((auxi = i + 2) < 8) {
 			if ((auxj = j - 1) >= 0) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
 				if (posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					casas[auxi][auxj] = 1;  // é um movimento possível
+					mat[auxi][auxj] = 1;  // é um movimento possível
 				}
-				if (eMovRei == 1) casas[auxi][auxj] = 1;
+				if (eMovRei == 1) mat[auxi][auxj] = 1;
 			}
 		}
 		
 	}
 
-	private void movimentaRainha (int i, int j) {
-		movimentaTorre(i,j);
-		movimentaBispo(i,j);
+	private void movimentaRainha (int i, int j, int[][] mat) {
+		movimentaTorre(i,j,mat);
+		movimentaBispo(i,j,mat);
 	}
 
-	private void movimentaPeao(int i, int j) {
+	private void movimentaPeao(int i, int j, int[][] mat) {
 		if(posicoes[i][j].getCor() == 0){	// movimenta para cima
 			if(i == 0)	{
 				VerificaPromocaoPeao(i,j);	// promocao de peao
 				return;
 			}
 			if(posicoes[i-1][j] == null)
-				casas[i-1][j] = 1;
+				mat[i-1][j] = 1;
 
 			if(i==6 && posicoes[i-2][j] == null)
-				casas[i-2][j] = 1;
+				mat[i-2][j] = 1;
 
 			if(j>0 && posicoes[i-1][j-1]!=null && posicoes[i-1][j-1].getCor()==1)
-				casas[i-1][j-1] = 1;
+				mat[i-1][j-1] = 1;
 
 			if(j<7 && posicoes[i-1][j+1]!=null && posicoes[i-1][j+1].getCor()==1)
-				casas[i-1][j+1] = 1;
+				mat[i-1][j+1] = 1;
 		}
 		else{		// movimenta para baixo
 			if(i == 7)	{
@@ -456,27 +462,27 @@ public class Regras {
 				return;
 			}
 			if(posicoes[i+1][j] == null)
-				casas[i+1][j] = 1;
+				mat[i+1][j] = 1;
 
 			if(i==1 && posicoes[i+2][j] == null)
-				casas[i+2][j] = 1;
+				mat[i+2][j] = 1;
 
 			if(j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor()==0)
-				casas[i+1][j-1] = 1;
+				mat[i+1][j-1] = 1;
 
 			if(j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor()==0)
-				casas[i+1][j+1] = 1;
+				mat[i+1][j+1] = 1;
 		}   
 	}
 
-	private void movimentaPeaoCaptura (int i, int j) {
-		if (posicoes[i][j].getCor() == 0 && j>0) casas[i-1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 0 && j<7) casas[i-1][j+1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j>0) casas[i+1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j<7) casas[i+1][j+1] = 1;
+	private void movimentaPeaoCaptura (int i, int j, int[][] mat) {
+		if (posicoes[i][j].getCor() == 0 && j>0) mat[i-1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 0 && j<7) mat[i-1][j+1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j>0) mat[i+1][j-1] = 1;
+		if (posicoes[i][j].getCor() == 1 && j<7) mat[i+1][j+1] = 1;
 	}
 	
-	private void movimentaRei (int i, int j) {
+	private void movimentaRei (int i, int j, int[][] mat) {
 		
 		int auxi, auxj;
 		int[][] auxRei = new int[8][8];
@@ -495,55 +501,56 @@ public class Regras {
 		
 		for (auxi = 0; auxi < 8; auxi++) {
 			for (auxj = 0; auxj < 8; auxj++) {
-				if (casas[auxi][auxj] == 1) {
+				if (mat[auxi][auxj] == 1) {
 					auxRei[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		tab.zeraCasas();
-		
+		zeraMat(mat);
+
 		if ((auxi = i + 1) < 8) {
 			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
-				casas[auxi][j] = 1;
+				mat[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
 				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					casas[auxi][auxj] = 1;
+					mat[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
 				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					casas[auxi][auxj] = 1;
+					mat[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxi = i - 1) >= 0) {
 			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
-				casas[auxi][j] = 1;
+				mat[auxi][j] = 1;
 			}
 			if ((auxj = j + 1) < 8) {
 				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					casas[auxi][auxj] = 1;
+					mat[auxi][auxj] = 1;
 				}
 			}
 			if ((auxj = j - 1) >= 0) {
 				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					casas[auxi][auxj] = 1;
+					mat[auxi][auxj] = 1;
 				}
 			}
 		}
 		
 		if ((auxj = j - 1) >= 0) {
 			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1 ) {
-				casas[i][auxj] = 1;
+				mat[i][auxj] = 1;
 			}
 		}
 		
 		if ((auxj = j + 1) < 8) {
 			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1) {
-				casas[i][auxj] = 1;
+				mat[i][auxj] = 1;
 			}
 		}
 	}
@@ -582,6 +589,100 @@ public class Regras {
 		return;
 		
 	}
+
+	private void verificaXeque(int i, int j){
+
+		novaMovimentacao(i,j);
+		for(int k=0; k<8; k++)
+			for(int p=0;p<8;p++)
+				if(casas[k][p]==1 && posicoes[k][p] instanceof Rei)	{// O Rei está em Xeque
+					emXeque = 1;
+					System.out.println("==== XEQUE ====");
+				}
+
+	}
+
+	private boolean verificaPossivelRoque(int i, int j){
+
+
+			if (posicoes[i][j] instanceof Torre && peça.getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
+				if (verificaRoque(j,0) == true) {
+					possivelRoqueBranco = 0;
+					selecao = 0;
+					vez = 1;
+					return false;
+				}
+			}
+			
+			if (posicoes[i][j] instanceof Torre && peça.getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
+				if (verificaRoque(j,1) == true) {
+					possivelRoquePreto = 0;
+					selecao = 0;
+					vez = 0;
+					return false;
+				}
+			}
+
+			possivelRoqueBranco = 0;
+			possivelRoquePreto = 0;
+
+			return true;
+
+	}
 	
-	
+	private void movimentaEmXeque(int i, int j){
+
+		emXeque = 0;
+
+		if(posicoes[i][j] instanceof Rei){
+
+			posicoes[i][j] = null;	// tira o Rei para calcular todas os possiveis movimentos dos adversarios
+
+			for(int k=0; k<8; k++)
+				for(int p=0;p<8;p++)
+					if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != peça.getCor()))// percorre todas as peças do adversário para preencher matriz matXeque
+						novaMovimentacao(k,p);
+
+			posicoes[i][j] = peça;
+
+			zeraMat(casas);
+			movimentaRei(i,j,casas);	// preenche matriz casas com possiveis movimentos do Rei
+
+			for(int k=0; k<8; k++)
+				for(int p=0;p<8;p++)
+					if(casas[k][p] == 1 && matXeque[k][p] == 1)
+						casas[k][p] = 0;						// atualiza matriz casas para impedir movimentos que não fujam de Xeque Mate
+			
+		}
+		else{
+			// peça clicada deve cobrir o Rei
+
+		}
+
+		verificaXequeMate();
+
+	}
+
+	private void zeraMat(int[][] mat){
+		for (int k = 0; k < 8; k++) {
+			for (int p = 0; p< 8; p++) {
+				mat[k][p] = 0;
+			}
+		}
+	}
+
+
+	private void verificaXequeMate(){
+
+		int m = 0;
+
+		for(int k=0; k<8; k++)
+				for(int p=0;p<8;p++)
+					if(casas[k][p] == 1)
+						m += 1;
+
+		if(m==0)
+			System.out.println("=====XEQUE-MATE=====");
+
+	}
 }
