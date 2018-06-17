@@ -11,6 +11,7 @@ public class Regras {
 	private Peça peça;
 	private int iOrigem, jOrigem, iTroca, jTroca;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
+	private int[][] matMovRei = new int[8][8];
 	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
 	// =================================================================  auxiliares para realizar os roques
@@ -39,6 +40,9 @@ public class Regras {
 		casas = c;
 		posicoes = p;
 		tab = t;
+		zeraMat(casas);
+		zeraMat(matXeque);
+		zeraMat(matMovRei);
 	}
 	
 	protected void Peça_Selecionada(int i, int j) {
@@ -83,7 +87,7 @@ public class Regras {
 
 				verificaXeque(i,j);
 			}
-			tab.zeraCasas();
+			zeraMat(casas);
 			selecao = 0;
 		}
 	}
@@ -106,11 +110,10 @@ public class Regras {
 				vez = 1;
 			else
 				vez = 0;
-
 			verificaXeque(i,j);
 		}
 		
-		tab.zeraCasas();
+		zeraMat(casas);
 		selecao = 0;
 	}
 	
@@ -208,19 +211,14 @@ public class Regras {
 
 		if(emXeque==1)
 			matCorrente = matXeque;
+		else if(eMovRei==1)
+			matCorrente = matMovRei;
 		else
 			matCorrente = casas;
 
 
-		if (eMovRei == 1) {
-			if (posicoes[i][j] instanceof Peão) movimentaPeaoCaptura(i,j,matCorrente);
-		}
-		
-		else {
-			if (posicoes[i][j] instanceof Peão) movimentaPeao(i,j,matCorrente);
-			if (posicoes[i][j] instanceof Rei) movimentaRei(i,j,matCorrente);
-		}
-		
+		if (posicoes[i][j] instanceof Peão) movimentaPeao(i,j,matCorrente);
+		if (posicoes[i][j] instanceof Rei) movimentaRei(i,j,matCorrente);
 		if (posicoes[i][j] instanceof Torre) movimentaTorre(i,j,matCorrente);
 		if (posicoes[i][j] instanceof Bispo) movimentaBispo(i,j,matCorrente);
 		if (posicoes[i][j] instanceof Cavalo) movimentaCavalo(i,j,matCorrente);
@@ -484,75 +482,50 @@ public class Regras {
 	
 	private void movimentaRei (int i, int j, int[][] mat) {
 		
-		int auxi, auxj;
-		int[][] auxRei = new int[8][8];
-		
+
+		if(eMovRei == 1){
+			for(int k = (i-1); k<= (i+1); k++){
+				for(int p = (j-1); p <= (j+1); p++){
+					if( k >= 0 && p>=0)
+						if( k <= 7 && p<= 7)
+							if(posicoes[k][p]==null || (posicoes[k][p].getCor() != posicoes[i][j].getCor()))
+									mat[k][p] = 1;
+				}
+			}
+			return;
+		}
+
 		eMovRei = 1;
-		
-		for (auxi = 0; auxi < 8; auxi++) {
-			for (auxj = 0; auxj < 8; auxj++) {
-				if (posicoes[auxi][auxj] != null && posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) {
-					novaMovimentacao(auxi,auxj);
+
+		for(int k=0; k<8; k++){
+					for(int p=0;p<8;p++){
+						if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != posicoes[i][j].getCor())){// percorre todas as peças do adversário para preencher matriz matXeque
+							novaMovimentacao(k,p);
+						}
+					}
 				}
-			}
-		}
-		
+
 		eMovRei = 0;
-		
-		for (auxi = 0; auxi < 8; auxi++) {
-			for (auxj = 0; auxj < 8; auxj++) {
-				if (mat[auxi][auxj] == 1) {
-					auxRei[auxi][auxj] = 1;
-				}
-			}
-		}
-		
-		tab.zeraCasas();
+
 		zeraMat(mat);
 
-		if ((auxi = i + 1) < 8) {
-			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
-				mat[auxi][j] = 1;
-			}
-			if ((auxj = j + 1) < 8) {
-				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					mat[auxi][auxj] = 1;
-				}
-			}
-			if ((auxj = j - 1) >= 0) {
-				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					mat[auxi][auxj] = 1;
-				}
+		for(int k = (i-1); k<= (i+1); k++){
+			for(int p = (j-1); p <= (j+1); p++){
+				System.out.println("k = "+k+", p = "+p);
+				if( k >= 0 && p>=0)
+					if( k <= 7 && p<= 7)
+						if(posicoes[k][p]==null || (posicoes[k][p].getCor() != posicoes[i][j].getCor()))
+								mat[k][p] = 1;
 			}
 		}
-		
-		if ((auxi = i - 1) >= 0) {
-			if ((posicoes[auxi][j] == null || posicoes[i][j].getCor() != posicoes[auxi][j].getCor()) && auxRei[auxi][j] != 1) {
-				mat[auxi][j] = 1;
-			}
-			if ((auxj = j + 1) < 8) {
-				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					mat[auxi][auxj] = 1;
-				}
-			}
-			if ((auxj = j - 1) >= 0) {
-				if ((posicoes[auxi][auxj] == null || posicoes[i][j].getCor() != posicoes[auxi][auxj].getCor()) && auxRei[auxi][auxj] != 1) {
-					mat[auxi][auxj] = 1;
-				}
-			}
-		}
-		
-		if ((auxj = j - 1) >= 0) {
-			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1 ) {
-				mat[i][auxj] = 1;
-			}
-		}
-		
-		if ((auxj = j + 1) < 8) {
-			if ((posicoes[i][auxj] == null || posicoes[i][j].getCor() != posicoes[i][auxj].getCor()) && auxRei[i][auxj] != 1) {
-				mat[i][auxj] = 1;
-			}
-		}
+
+
+		for(int k=0; k<8; k++)
+			for(int p=0;p<8;p++)
+				if(mat[k][p] == 1 && matMovRei[k][p] == 1)
+					mat[k][p] = 0;
+
+		zeraMat(matMovRei);
 	}
 
 	private void VerificaPromocaoPeao(int i, int j) {
@@ -632,21 +605,38 @@ public class Regras {
 	
 	private void movimentaEmXeque(int i, int j){
 
-		emXeque = 0;
-
 		if(posicoes[i][j] instanceof Rei){
 
 			posicoes[i][j] = null;	// tira o Rei para calcular todas os possiveis movimentos dos adversarios
 
-			for(int k=0; k<8; k++)
-				for(int p=0;p<8;p++)
-					if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != peça.getCor()))// percorre todas as peças do adversário para preencher matriz matXeque
+			for(int k=0; k<8; k++){
+				for(int p=0;p<8;p++){
+					if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != peça.getCor())){// percorre todas as peças do adversário para preencher matriz matXeque
 						novaMovimentacao(k,p);
+						System.out.println("Matriz matXeque");
+						for(int m=0; m<8; m++){
+								for(int n=0;n<8;n++)
+									System.out.print(""+matXeque[m][n]+"  ");
+								System.out.println();
+						}
+					}
+				}
+			}
 
 			posicoes[i][j] = peça;
 
+			System.out.println();
+			System.out.println();
+
 			zeraMat(casas);
 			movimentaRei(i,j,casas);	// preenche matriz casas com possiveis movimentos do Rei
+
+			System.out.println("Matriz Casas");
+			for(int k=0; k<8; k++){
+				for(int p=0;p<8;p++)
+					System.out.print(""+casas[k][p]+"  ");
+				System.out.println();
+			}
 
 			for(int k=0; k<8; k++)
 				for(int p=0;p<8;p++)
@@ -661,6 +651,7 @@ public class Regras {
 
 		verificaXequeMate();
 
+		zeraMat(matXeque);
 	}
 
 	private void zeraMat(int[][] mat){
