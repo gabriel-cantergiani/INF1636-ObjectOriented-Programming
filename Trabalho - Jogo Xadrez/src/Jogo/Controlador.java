@@ -1,5 +1,10 @@
 package Jogo;
 
+import Interface.Inicializador;
+import Interface.XadrezFrame;
+import Listeners.TratadorClique;
+import java.io.*;
+
 public class Controlador {
 	
 	private static Controlador controlador = null;
@@ -31,6 +36,32 @@ public class Controlador {
 	
 	public void Recebe_Promocao(String str) {
 		Tabuleiro.getTabuleiro().EfetuaPromocaoPeao(str);
+	}
+	
+	public void novoJogo() {
+		
+		Tabuleiro.getTabuleiro().zeraCasas();
+		Tabuleiro.getTabuleiro().inicializaTabuleiro();
+		
+		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique(XadrezFrame.getXadrezFrame()));
+		XadrezFrame.getXadrezFrame().setVisible(true);
+		Inicializador.getInicializador().setVisible(false);
+	}
+	
+	public void carregarJogo(File f) {
+		
+		FluxoDados.getFluxoDados().CarregarPartida(f);
+		System.out.println("Jogo Carregado!");
+
+		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique(XadrezFrame.getXadrezFrame()));
+		XadrezFrame.getXadrezFrame().setVisible(true);
+		Inicializador.getInicializador().setVisible(false);
+	}
+
+	public void salvarJogo(File f){
+
+		FluxoDados.getFluxoDados().SalvarPartida(f);
+		System.out.println("Jogo Salvo!");
 	}
 	
 }

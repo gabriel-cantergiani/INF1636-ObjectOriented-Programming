@@ -12,8 +12,7 @@ public class Tabuleiro implements Observado{
 	private Observador obs;
 	
 	private Tabuleiro() {
-		zeraCasas();
-		inicializaTabuleiro();
+		
 	}
 	
 	public static Tabuleiro getTabuleiro() {
@@ -30,7 +29,7 @@ public class Tabuleiro implements Observado{
 		}
 	}
 	
-	private void inicializaTabuleiro() {
+	protected void inicializaTabuleiro() {
 		
 		for(int i=0; i<8; i++) {
 			posicoes[i] = new Peça[8];
@@ -102,4 +101,159 @@ public class Tabuleiro implements Observado{
 		
 	}
 
+	protected String traduzMatrizes(){
+
+		String str="";
+
+		for(int i=0; i<8; i++){				// registra posicção das peças
+			for(int j=0; j<8; j++){
+
+				if(posicoes[i][j] == null)
+					str = str.concat("nulo ");
+
+				else if(posicoes[i][j] instanceof Torre)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("T0 ");
+					else
+						str = str.concat("T1 ");
+
+				else if(posicoes[i][j] instanceof Cavalo)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("C0 ");
+					else
+						str = str.concat("C1 ");
+
+				else if(posicoes[i][j] instanceof Bispo)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("B0 ");
+					else
+						str = str.concat("B1 ");
+
+				else if(posicoes[i][j] instanceof Rainha)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("RA0 ");
+					else
+						str = str.concat("RA1 ");
+
+				else if(posicoes[i][j] instanceof Rei)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("RE0 ");
+					else
+						str = str.concat("RE1 ");
+
+				else if(posicoes[i][j] instanceof Peão)
+					if(posicoes[i][j].getCor() == 0)
+						str = str.concat("P0 ");
+					else
+						str = str.concat("P1 ");
+			}
+		}
+
+		if(regras.vez == 0)				// registra de qual jogador é a vez
+			str = str.concat("V0 ");
+		else
+			str = str.concat("V1 ");
+
+
+		str = str.concat(""+regras.movReiBranco);			// registra possiblidade dos Roques
+		str = str.concat(""+regras.movReiPreto);
+		str = str.concat(""+regras.movTorreBrancaDir);
+		str = str.concat(""+regras.movTorreBrancaEsq);
+		str = str.concat(""+regras.movTorrePretaDir);
+		str = str.concat(""+regras.movTorrePretaEsq);
+
+		return str;
+	}
+
+	protected void traduzString(String str){
+
+		int k=0;
+		String s1="";
+
+		for(int i=0; i<8; i++){
+
+			for(int j=0; j<8; j++){
+				while(str.charAt(k) != ' '){
+					s1 = s1+str.charAt(k);
+					k++;
+				}
+
+				switch(s1.charAt(0)){
+					case 'T':{
+						if((s1.charAt(1))=='0')
+							posicoes[i][j] = new Torre(0);
+						else
+							posicoes[i][j] = new Torre(1);
+						break;
+					}
+
+					case 'C':{
+						if((s1.charAt(1))=='0')
+							posicoes[i][j] = new Cavalo(0);
+						else
+							posicoes[i][j] = new Cavalo(1);
+						break;
+					}
+
+					case 'B':{
+						if((s1.charAt(1))=='0')
+							posicoes[i][j] = new Bispo(0);
+						else
+							posicoes[i][j] = new Bispo(1);
+						break;
+					}
+
+					case 'P':{
+						if((s1.charAt(1))=='0')
+							posicoes[i][j] = new Peão(0);
+						else
+							posicoes[i][j] = new Peão(1);
+						break;
+					}
+
+					case 'R':{
+						if(s1.charAt(1)=='A')
+							if((s1.charAt(2))=='0')
+								posicoes[i][j] = new Rainha(0);
+							else
+								posicoes[i][j] = new Rainha(1);
+
+						else
+							if((s1.charAt(2))=='0')
+								posicoes[i][j] = new Rei(0);
+							else
+								posicoes[i][j] = new Rei(1);
+						break;
+					}
+
+					case 'n':{
+							posicoes[i][j] = null;
+							break;
+					}
+				}
+
+				k++;
+				s1 = "";
+			}
+		}
+
+		k++;
+		if(str.charAt(k)=='0') {
+			regras.vez = 0;
+		}
+		else{
+			regras.vez = 1;
+		}
+		k+=2;
+
+		regras.movReiBranco = Character.getNumericValue(str.charAt(k));	k++;
+		regras.movReiPreto = Character.getNumericValue(str.charAt(k));	k++;
+		regras.movTorreBrancaDir = Character.getNumericValue(str.charAt(k));	k++;
+		regras.movTorreBrancaEsq = Character.getNumericValue(str.charAt(k));	k++;
+		regras.movTorrePretaDir = Character.getNumericValue(str.charAt(k));	k++;
+		regras.movTorrePretaEsq = Character.getNumericValue(str.charAt(k));
+
+		zeraCasas();
+	}
+	
 }

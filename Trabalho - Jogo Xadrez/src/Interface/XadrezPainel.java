@@ -8,9 +8,11 @@ import Jogo.Controlador;
 import Jogo.Observado;
 import Jogo.Observador;
 import Listeners.*;
+import java.awt.event.*;
 
 public class XadrezPainel extends JPanel implements Observador{
 
+	private static XadrezPainel xpainel = null;
 	private Rectangle2D Rect2D = new Rectangle2D.Double();
 	private int larguraCasa, alturaCasa;
 	private int larguraPeça, alturaPeça;
@@ -19,16 +21,24 @@ public class XadrezPainel extends JPanel implements Observador{
 	private int[][] casas;
 	private Peça[][] pos;
 	private Observado observado;
+	private TratadorPromocao tratadorPromocao;
 
-	
-	public XadrezPainel() {
+	private XadrezPainel() {
 		
 		Controlador.getControlador().registra(this);
 		observado = Controlador.getObservado();
-		
+	
 		casas = observado.getCasas();
 		pos = observado.getPeças();
 		
+		tratadorPromocao = new TratadorPromocao();
+		
+	}
+
+	public static XadrezPainel getXadrezPainel() {
+		if(xpainel == null)
+			xpainel = new XadrezPainel();
+		return xpainel;
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -40,8 +50,6 @@ public class XadrezPainel extends JPanel implements Observador{
 		larguraPeça = 11*larguraCasa/20;
 		alturaPeça = 11*alturaCasa/20;
 	
-		
-		System.out.println(larguraCasa);
 		
 		for(int i=0; i<8; i++) {
 			posicaoY = alturaCasa*i;
@@ -78,6 +86,10 @@ public class XadrezPainel extends JPanel implements Observador{
 	}
 
 	public void notify(Observado o, int i){
+		
+		casas = observado.getCasas();
+		pos = observado.getPeças();
+		
 		if(i==1)
 			repaint();
 		else if(i==2)
@@ -89,7 +101,6 @@ public class XadrezPainel extends JPanel implements Observador{
 		JPopupMenu menu = new JPopupMenu("Promoção de Peão");
 		double larguraItem = this.getWidth()/(1.6);
 		double alturaItem = this.getHeight()/(11.7);
-		TratadorPromocao tratador = new TratadorPromocao();
 		
 		Font fonte = new Font("SERIF",Font.BOLD, 25);
 		JMenuItem label = new JMenuItem("Seleciona uma peça para promover o Peão:");
@@ -110,10 +121,10 @@ public class XadrezPainel extends JPanel implements Observador{
 		botRainha.setFont(fonte);
 		
 		
-		botTorre.addActionListener(tratador);
-		botCavalo.addActionListener(tratador);
-		botBispo.addActionListener(tratador);
-		botRainha.addActionListener(tratador);
+		botTorre.addActionListener(tratadorPromocao);
+		botCavalo.addActionListener(tratadorPromocao);
+		botBispo.addActionListener(tratadorPromocao);
+		botRainha.addActionListener(tratadorPromocao);
 		
 		menu.add(label);
 		menu.add(botTorre);
@@ -121,5 +132,33 @@ public class XadrezPainel extends JPanel implements Observador{
 		menu.add(botBispo);
 		menu.add(botRainha);
 		menu.show(this, (int)(this.getWidth()-larguraItem)/2, (int)(this.getHeight()-5*alturaItem)/2);
+	}
+
+	public void mostraMenuSalvamento(int x, int y){
+
+		JPopupMenu menu = new JPopupMenu("Salvar o Jogo");
+		double larguraItem = this.getWidth()/(1.6);
+		double alturaItem = this.getHeight()/(11.7);
+		Font fonte = new Font("SERIF",Font.BOLD, 25);
+		JMenuItem botSalvar = new JMenuItem("Salvar a partida no estado atual");
+		JFileChooser fc = new JFileChooser();
+                                                                                                                                                        
+		botSalvar.setPreferredSize(new Dimension(350,80));
+		botSalvar.setFont(fonte);
+
+		fc.setDialogTitle("Escolha o destino para salvar o arquivo");
+		
+		botSalvar.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int returnVal = fc.showSaveDialog(XadrezFrame.getXadrezFrame());
+				if(returnVal==JFileChooser.APPROVE_OPTION){
+					Controlador.getControlador().salvarJogo(fc.getSelectedFile());
+				}
+			}
+		});
+
+		
+		menu.add(botSalvar);
+		menu.show(this, x, y);
 	}
 }
