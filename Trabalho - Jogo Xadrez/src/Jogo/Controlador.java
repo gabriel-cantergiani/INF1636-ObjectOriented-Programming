@@ -3,6 +3,7 @@ package Jogo;
 import Interface.Inicializador;
 import Interface.XadrezFrame;
 import Listeners.TratadorClique;
+import java.io.*;
 
 public class Controlador {
 	
@@ -47,9 +48,20 @@ public class Controlador {
 		Inicializador.getInicializador().setVisible(false);
 	}
 	
-	public void carregarJogo() {
+	public void carregarJogo(File f) {
 		
-		
+		FluxoDados.getFluxoDados().CarregarPartida(f);
+		System.out.println("Jogo Carregado!");
+
+		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique(XadrezFrame.getXadrezFrame()));
+		XadrezFrame.getXadrezFrame().setVisible(true);
+		Inicializador.getInicializador().setVisible(false);
+	}
+
+	public void salvarJogo(File f){
+
+		FluxoDados.getFluxoDados().SalvarPartida(f);
+		System.out.println("Jogo Salvo!");
 	}
 	
 }

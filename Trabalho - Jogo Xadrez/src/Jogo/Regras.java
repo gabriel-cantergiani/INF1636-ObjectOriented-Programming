@@ -12,17 +12,17 @@ public class Regras {
 	private int iOrigem, jOrigem, iTroca, jTroca;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int[][] matMovRei = new int[8][8];
-	private int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
+	protected int vez = 0;  // 0 -> brancos, 1-> pretos  (brancos começam)
 	
 	// =================================================================  auxiliares para realizar os roques
 	// 0 -> não foi movimentado nenhuma vez, 1 -> ja foi movimentado
 	
-	private int movReiBranco = 0;
-	private int movReiPreto = 0;
-	private int movTorreBrancaDir = 0;
-	private int movTorreBrancaEsq = 0;
-	private int movTorrePretaDir = 0;
-	private int movTorrePretaEsq = 0;
+	protected int movReiBranco = 0;
+	protected int movReiPreto = 0;
+	protected int movTorreBrancaDir = 0;
+	protected int movTorreBrancaEsq = 0;
+	protected int movTorrePretaDir = 0;
+	protected int movTorrePretaEsq = 0;
 	
 	private int possivelRoqueBranco = 0;
 	private int possivelRoquePreto = 0;
@@ -133,7 +133,7 @@ public class Regras {
 			eMovRei = 0;
 			
 			if (movTorreBrancaEsq == 0 && j == 0) {
-				
+				System.out.println("OK1");
 				if (posicoes[7][1] == null && posicoes[7][2] == null && posicoes[7][3] == null && casas[7][4] == 0 && casas[7][3] == 0 && casas[7][2] == 0) {
 					posicoes[7][2] = posicoes[7][4];
 					posicoes[7][3] = posicoes[7][0];
@@ -227,12 +227,28 @@ public class Regras {
 	}
 	
 	private void verificaMovReiTorre () {
-		if (posicoes[7][7] == null || posicoes[7][7] instanceof Torre || posicoes[7][7].getCor() != 0) movTorreBrancaDir = 1;
-		if (posicoes[7][0] == null || posicoes[7][0] instanceof Torre || posicoes[7][0].getCor() != 0) movTorreBrancaEsq = 1;
-		if (posicoes[0][7] == null || posicoes[0][7] instanceof Torre || posicoes[0][7].getCor() != 1) movTorrePretaDir = 1;
-		if (posicoes[0][0] == null || posicoes[0][0] instanceof Torre || posicoes[0][0].getCor() != 1) movTorrePretaEsq = 1;
-		if (posicoes[7][4] == null || posicoes[7][4] instanceof Rei || posicoes[7][4].getCor() != 0) movReiBranco = 1;
-		if (posicoes[0][4] == null || posicoes[0][4] instanceof Rei || posicoes[0][4].getCor() != 1) movReiPreto = 1;
+		if(iOrigem == 0) {
+			if(jOrigem == 0){
+				movTorrePretaEsq = 1;
+			}
+			else if(jOrigem == 7){
+				movTorrePretaDir = 1;
+			}
+			else if (jOrigem == 4){
+				movReiPreto = 1;
+			}
+		}
+		else if(iOrigem == 7) {
+			if(jOrigem == 0) {
+				movTorreBrancaEsq = 1;
+			}
+			else if(jOrigem == 7) {
+				movTorreBrancaDir = 1;
+			}
+			else if(jOrigem == 4){
+				movReiBranco = 1;
+			}
+		}
 	}
 
 	private void movimentaTorre (int i, int j, int[][] mat){

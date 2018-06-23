@@ -5,6 +5,7 @@ import java.awt.event.*;
 
 import Jogo.Controlador;
 import Interface.XadrezFrame;
+import Interface.XadrezPainel;
 
 public class TratadorClique extends MouseAdapter implements MouseListener{
 	
@@ -45,6 +46,7 @@ public class TratadorClique extends MouseAdapter implements MouseListener{
 			}
 			else if(e.getButton() == MouseEvent.BUTTON3) { 
 				System.out.println("Botao direito.");
+				XadrezPainel.getXadrezPainel().mostraMenuSalvamento(x,y);
 				
 			}
 		}

@@ -1,11 +1,12 @@
 package Interface;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Jogo.Controlador;
 
 import java.awt.*;
-import Listeners.TratadorIniciaJogo;
+import java.awt.event.*;
 
 public class Inicializador extends JFrame {
 	
@@ -20,10 +21,9 @@ public class Inicializador extends JFrame {
 		Dimension ss = tk.getScreenSize();
 		JButton bNovoJogo = new JButton("Novo Jogo");
 		JButton bCarregarJogo = new JButton("Carregar um jogo salvo");
-		JLabel	label = new JLabel("Jogo de Xadrez");
+		JLabel	label = new JLabel("Xadrez");
 		Font fonte1 = new Font("SERIF",Font.BOLD, 40);
 		Font fonte2 = new Font("SERIF",Font.BOLD, 30);
-		TratadorIniciaJogo tratador = new TratadorIniciaJogo();
 		
 		this.getContentPane().setBackground(Color.gray);
 		this.setLocation(ss.width/4, (2*ss.height-ss.width)/4);
@@ -34,15 +34,33 @@ public class Inicializador extends JFrame {
 		
 		painel.setBounds(0,0, this.getWidth(), this.getHeight());
 		
-		label.setBounds(350, 30, 300, 200);
+		label.setBounds(410, 30, 300, 200);
 		label.setFont(fonte1);
 		bNovoJogo.setBounds(300, 250, 350, 150);
 		bNovoJogo.setFont(fonte2);
 		bCarregarJogo.setBounds(300, 500, 350, 150);
 		bCarregarJogo.setFont(fonte2);
 		
-		bNovoJogo.addActionListener(tratador);
-		bCarregarJogo.addActionListener(tratador);
+		bNovoJogo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Controlador.getControlador().novoJogo();
+			}
+		});
+		
+		bCarregarJogo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				JFileChooser fc = new JFileChooser();
+				fc.setDialogTitle("Escolha um arquivo para carregar");
+				fc.setFileFilter(new FileNameExtensionFilter("Arquivos de Texto", "txt"));
+				int returnVal = fc.showOpenDialog(XadrezFrame.getXadrezFrame());
+				if(returnVal==JFileChooser.APPROVE_OPTION){
+					Controlador.getControlador().carregarJogo(fc.getSelectedFile());
+				}
+				else
+					System.out.println("Erro ao escolher arquivo!");
+			}
+		});
 		
 		painel.add(bNovoJogo);
 		painel.add(bCarregarJogo);

@@ -8,6 +8,7 @@ import Jogo.Controlador;
 import Jogo.Observado;
 import Jogo.Observador;
 import Listeners.*;
+import java.awt.event.*;
 
 public class XadrezPainel extends JPanel implements Observador{
 
@@ -20,8 +21,8 @@ public class XadrezPainel extends JPanel implements Observador{
 	private int[][] casas;
 	private Peça[][] pos;
 	private Observado observado;
-	private TratadorPromocao tratador;
-	
+	private TratadorPromocao tratadorPromocao;
+
 	private XadrezPainel() {
 		
 		Controlador.getControlador().registra(this);
@@ -30,7 +31,7 @@ public class XadrezPainel extends JPanel implements Observador{
 		casas = observado.getCasas();
 		pos = observado.getPeças();
 		
-		tratador = new TratadorPromocao();
+		tratadorPromocao = new TratadorPromocao();
 		
 	}
 
@@ -120,10 +121,10 @@ public class XadrezPainel extends JPanel implements Observador{
 		botRainha.setFont(fonte);
 		
 		
-		botTorre.addActionListener(tratador);
-		botCavalo.addActionListener(tratador);
-		botBispo.addActionListener(tratador);
-		botRainha.addActionListener(tratador);
+		botTorre.addActionListener(tratadorPromocao);
+		botCavalo.addActionListener(tratadorPromocao);
+		botBispo.addActionListener(tratadorPromocao);
+		botRainha.addActionListener(tratadorPromocao);
 		
 		menu.add(label);
 		menu.add(botTorre);
@@ -131,5 +132,33 @@ public class XadrezPainel extends JPanel implements Observador{
 		menu.add(botBispo);
 		menu.add(botRainha);
 		menu.show(this, (int)(this.getWidth()-larguraItem)/2, (int)(this.getHeight()-5*alturaItem)/2);
+	}
+
+	public void mostraMenuSalvamento(int x, int y){
+
+		JPopupMenu menu = new JPopupMenu("Salvar o Jogo");
+		double larguraItem = this.getWidth()/(1.6);
+		double alturaItem = this.getHeight()/(11.7);
+		Font fonte = new Font("SERIF",Font.BOLD, 25);
+		JMenuItem botSalvar = new JMenuItem("Salvar a partida no estado atual");
+		JFileChooser fc = new JFileChooser();
+                                                                                                                                                        
+		botSalvar.setPreferredSize(new Dimension(350,80));
+		botSalvar.setFont(fonte);
+
+		fc.setDialogTitle("Escolha o destino para salvar o arquivo");
+		
+		botSalvar.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				int returnVal = fc.showSaveDialog(XadrezFrame.getXadrezFrame());
+				if(returnVal==JFileChooser.APPROVE_OPTION){
+					Controlador.getControlador().salvarJogo(fc.getSelectedFile());
+				}
+			}
+		});
+
+		
+		menu.add(botSalvar);
+		menu.show(this, x, y);
 	}
 }
