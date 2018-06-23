@@ -12,8 +12,7 @@ public class Tabuleiro implements Observado{
 	private Observador obs;
 	
 	private Tabuleiro() {
-		zeraCasas();
-		inicializaTabuleiro();
+		
 	}
 	
 	public static Tabuleiro getTabuleiro() {
@@ -30,7 +29,7 @@ public class Tabuleiro implements Observado{
 		}
 	}
 	
-	private void inicializaTabuleiro() {
+	protected void inicializaTabuleiro() {
 		
 		for(int i=0; i<8; i++) {
 			posicoes[i] = new Peça[8];

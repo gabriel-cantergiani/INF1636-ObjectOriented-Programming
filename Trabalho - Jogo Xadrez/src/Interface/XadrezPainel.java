@@ -11,6 +11,7 @@ import Listeners.*;
 
 public class XadrezPainel extends JPanel implements Observador{
 
+	private static XadrezPainel xpainel = null;
 	private Rectangle2D Rect2D = new Rectangle2D.Double();
 	private int larguraCasa, alturaCasa;
 	private int larguraPeça, alturaPeça;
@@ -21,7 +22,7 @@ public class XadrezPainel extends JPanel implements Observador{
 	private Observado observado;
 	private TratadorPromocao tratador;
 	
-	public XadrezPainel() {
+	private XadrezPainel() {
 		
 		Controlador.getControlador().registra(this);
 		observado = Controlador.getObservado();
@@ -31,6 +32,12 @@ public class XadrezPainel extends JPanel implements Observador{
 		
 		tratador = new TratadorPromocao();
 		
+	}
+
+	public static XadrezPainel getXadrezPainel() {
+		if(xpainel == null)
+			xpainel = new XadrezPainel();
+		return xpainel;
 	}
 	
 	public void paintComponent(Graphics g) {
