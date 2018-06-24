@@ -8,7 +8,7 @@ public class Regras {
 	private int[][] casas;
 	private Peça[][] posicoes;
 	private int selecao = 0; // selecao = 0 -> nada selecionado,  selecao = 1 -> peça selecionada
-	private Peça peça;
+	private Peça peça, peçaAux;
 	private int iOrigem, jOrigem, iTroca, jTroca;	// indices de origem da peça a ser movimentada
 	private int eMovRei = 0;   // indica se esta verificando a movimentacao do rei   (0 -> não, 1-> sim)
 	private int[][] matMovRei = new int[8][8];
@@ -29,7 +29,7 @@ public class Regras {
 
 	// =======================================================  auxiliares para checar Xeque e XequeMate
 
-	private int emXeque = 0;				
+	protected int emXeque = 0;				
 	private int[][] matXeque = new int[8][8];
 	private int[][] matCorrente;
 
@@ -489,13 +489,6 @@ public class Regras {
 				mat[i+1][j+1] = 1;
 		}
 	}
-
-	private void movimentaPeaoCaptura (int i, int j, int[][] mat) {
-		if (posicoes[i][j].getCor() == 0 && j>0) mat[i-1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 0 && j<7) mat[i-1][j+1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j>0) mat[i+1][j-1] = 1;
-		if (posicoes[i][j].getCor() == 1 && j<7) mat[i+1][j+1] = 1;
-	}
 	
 	private void movimentaRei (int i, int j, int[][] mat) {
 		
@@ -560,23 +553,23 @@ public class Regras {
 		
 		switch(str) {
 		
-		case "Torre":{
-			posicoes[iTroca][jTroca] = new Torre(posicoes[iTroca][jTroca].getCor());
-			break;
+				case "Torre":{
+					posicoes[iTroca][jTroca] = new Torre(posicoes[iTroca][jTroca].getCor());
+					break;
+				}
+				case "Cavalo":{
+					posicoes[iTroca][jTroca] = new Cavalo(posicoes[iTroca][jTroca].getCor());
+					break;
+				}
+				case "Bispo":{
+					posicoes[iTroca][jTroca] = new Bispo(posicoes[iTroca][jTroca].getCor());
+					break;
+				}
+				case "Rainha":{
+					posicoes[iTroca][jTroca] = new Rainha(posicoes[iTroca][jTroca].getCor());
+					break;
+				}
 		}
-		case "Cavalo":{
-			posicoes[iTroca][jTroca] = new Cavalo(posicoes[iTroca][jTroca].getCor());
-			break;
-		}
-		case "Bispo":{
-			posicoes[iTroca][jTroca] = new Bispo(posicoes[iTroca][jTroca].getCor());
-			break;
-		}
-		case "Rainha":{
-			posicoes[iTroca][jTroca] = new Rainha(posicoes[iTroca][jTroca].getCor());
-			break;
-		}
-	}
 		return;
 		
 	}
@@ -588,6 +581,7 @@ public class Regras {
 				if(casas[k][p]==1 && posicoes[k][p] instanceof Rei)	{  // O Rei está em Xeque
 					emXeque = 1;
 					System.out.println("==== XEQUE ====");
+					movimentaEmXeque(k,p);
 				}
 
 	}
@@ -624,27 +618,19 @@ public class Regras {
 
 		if(posicoes[i][j] instanceof Rei){
 
+			peçaAux = posicoes[i][j];
 			posicoes[i][j] = null;	// tira o Rei para calcular todas os possiveis movimentos dos adversarios
 			eMovRei = 1;
 			for(int k=0; k<8; k++){
 				for(int p=0;p<8;p++){
-					if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != peça.getCor())){// percorre todas as peças do adversário para preencher matriz matXeque
+					if( posicoes[k][p]!=null && (posicoes[k][p].getCor() != peçaAux.getCor())){// percorre todas as peças do adversário para preencher matriz matXeque
 						novaMovimentacao(k,p);
-						System.out.println("Matriz matXeque");
-						for(int m=0; m<8; m++){
-								for(int n=0;n<8;n++)
-									System.out.print(matXeque[m][n]+"  ");
-								System.out.println();
-						}
 					}
 				}
 			}
 
-			posicoes[i][j] = peça;
+			posicoes[i][j] = peçaAux;
 			eMovRei = 0;
-
-			System.out.println();
-			System.out.println();
 
 			zeraMat(casas);
 			movimentaRei(i,j,casas);	// preenche matriz casas com possiveis movimentos do Rei

@@ -1,6 +1,4 @@
 import Interface.*;
-import Jogo.Controlador;
-import Listeners.TratadorClique;
 
 public class Main {
 	

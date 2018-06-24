@@ -1,11 +1,9 @@
 package Interface;
 
-import java.awt.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.*;
-import Listeners.TratadorClique;
 
 public class XadrezFrame extends JFrame{
 	

@@ -43,7 +43,7 @@ public class Controlador {
 		Tabuleiro.getTabuleiro().zeraCasas();
 		Tabuleiro.getTabuleiro().inicializaTabuleiro();
 		
-		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique(XadrezFrame.getXadrezFrame()));
+		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique());
 		XadrezFrame.getXadrezFrame().setVisible(true);
 		Inicializador.getInicializador().setVisible(false);
 	}
@@ -53,7 +53,7 @@ public class Controlador {
 		FluxoDados.getFluxoDados().CarregarPartida(f);
 		System.out.println("Jogo Carregado!");
 
-		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique(XadrezFrame.getXadrezFrame()));
+		XadrezFrame.getXadrezFrame().addMouseListener(new TratadorClique());
 		XadrezFrame.getXadrezFrame().setVisible(true);
 		Inicializador.getInicializador().setVisible(false);
 	}

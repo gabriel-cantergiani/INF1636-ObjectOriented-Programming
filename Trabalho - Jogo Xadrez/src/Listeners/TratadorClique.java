@@ -1,6 +1,5 @@
 package Listeners;
 
-import java.awt.*;
 import java.awt.event.*;
 
 import Jogo.Controlador;
@@ -12,9 +11,9 @@ public class TratadorClique extends MouseAdapter implements MouseListener{
 	Controlador controlador;
 	XadrezFrame frame;
 	
-	public TratadorClique(XadrezFrame f) {
+	public TratadorClique() {
 		controlador = Controlador.getControlador();
-		frame = f;
+		frame = XadrezFrame.getXadrezFrame();
 	}
 	
 	public void mouseClicked(MouseEvent e) {

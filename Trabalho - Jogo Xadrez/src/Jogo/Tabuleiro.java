@@ -1,7 +1,6 @@
 package Jogo;
 
 import Peça.*;
-import java.awt.*;
 
 public class Tabuleiro implements Observado{
 	
@@ -162,6 +161,9 @@ public class Tabuleiro implements Observado{
 		str = str.concat(""+regras.movTorrePretaDir);
 		str = str.concat(""+regras.movTorrePretaEsq);
 
+		str = str.concat(" X");					// registra estado do Xeque
+		str = str.concat(""+regras.emXeque);
+
 		return str;
 	}
 
@@ -251,7 +253,11 @@ public class Tabuleiro implements Observado{
 		regras.movTorreBrancaDir = Character.getNumericValue(str.charAt(k));	k++;
 		regras.movTorreBrancaEsq = Character.getNumericValue(str.charAt(k));	k++;
 		regras.movTorrePretaDir = Character.getNumericValue(str.charAt(k));	k++;
-		regras.movTorrePretaEsq = Character.getNumericValue(str.charAt(k));
+		regras.movTorrePretaEsq = Character.getNumericValue(str.charAt(k)); k++;
+
+		k++;
+		k++;
+		regras.emXeque = Character.getNumericValue(str.charAt(k));
 
 		zeraCasas();
 	}
