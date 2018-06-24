@@ -462,7 +462,7 @@ public class Regras {
 			if(posicoes[i-1][j] == null && eMovRei==0)
 				mat[i-1][j] = 1;
 
-			if(i==6 && posicoes[i-2][j] == null && eMovRei==0)
+			if(i==6 && posicoes[i-2][j] == null && posicoes[i-1][j] == null && eMovRei==0)
 				mat[i-2][j] = 1;
 
 			if((j>0 && posicoes[i-1][j-1]!=null && posicoes[i-1][j-1].getCor()==1) || (j>0 && eMovRei==1))
@@ -479,7 +479,7 @@ public class Regras {
 			if(posicoes[i+1][j] == null && eMovRei==0)
 				mat[i+1][j] = 1;
 
-			if(i==1 && posicoes[i+2][j] == null && eMovRei==0)
+			if(i==1 && posicoes[i+2][j] == null && posicoes[i+1][j] == null && eMovRei==0)
 				mat[i+2][j] = 1;
 
 			if((j>0 && posicoes[i+1][j-1]!=null && posicoes[i+1][j-1].getCor()==0) || (j>0 && eMovRei==1))
@@ -487,7 +487,7 @@ public class Regras {
 
 			if((j<7 && posicoes[i+1][j+1]!=null && posicoes[i+1][j+1].getCor()==0) || (j<7 && eMovRei==1))
 				mat[i+1][j+1] = 1;
-		}   
+		}
 	}
 
 	private void movimentaPeaoCaptura (int i, int j, int[][] mat) {
@@ -585,7 +585,7 @@ public class Regras {
 		novaMovimentacao(i,j);
 		for(int k=0; k<8; k++)
 			for(int p=0;p<8;p++)
-				if(casas[k][p]==1 && posicoes[k][p] instanceof Rei)	{// O Rei está em Xeque
+				if(casas[k][p]==1 && posicoes[k][p] instanceof Rei)	{  // O Rei está em Xeque
 					emXeque = 1;
 					System.out.println("==== XEQUE ====");
 				}
