@@ -86,6 +86,7 @@ public class Regras {
 				else if (vez == 1) vez = 0;
 
 				verificaXeque(i,j);
+				verificaCongelamento();
 			}
 			zeraMat(casas);
 			selecao = 0;
@@ -111,6 +112,7 @@ public class Regras {
 			else
 				vez = 0;
 			verificaXeque(i,j);
+			verificaCongelamento();
 		}
 		
 		zeraMat(casas);
@@ -673,7 +675,6 @@ public class Regras {
 		}
 	}
 
-
 	private void verificaXequeMate(){
 
 		int m = 0;
@@ -703,6 +704,28 @@ public class Regras {
 
 	}
 
+	private void verificaCongelamento(){
+
+		if(emXeque==1)
+			return;
+
+		for(int k=0; k<8; k++)
+				for(int p=0;p<8;p++)
+					if(posicoes[k][p] instanceof Rei && posicoes[k][p].getCor() != peça.getCor())
+						movimentaRei(k,p,casas);
+
+		int m = 0;
+
+		for(int k=0; k<8; k++)
+				for(int p=0;p<8;p++)
+					if(casas[k][p] == 1)
+						m += 1;
+
+
+		if(m==0)
+			tab.notificaXequeMate("Empate! O Jogo acabou por congelamento!");
+
+	}
 
 	protected void reiniciaJogo(){
 		selecao = 0;
