@@ -63,6 +63,7 @@ public class Regras {
 			if(emXeque==1){
 				movimentaEmXeque(i,j);
 				emXeque=0;
+				return;
 			}
 			else
 				novaMovimentacao(i,j);
@@ -656,13 +657,8 @@ public class Regras {
 				System.out.println();
 			}
 
+			verificaXequeMate();
 		}
-		else{
-			// peça clicada deve cobrir o Rei
-
-		}
-
-		verificaXequeMate();
 
 		zeraMat(matXeque);
 	}
