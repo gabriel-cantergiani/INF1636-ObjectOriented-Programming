@@ -12,4 +12,5 @@ public interface Observado {
 	
 	public Peça[][] getPeças();
 	
+	public String getResultado();
 }

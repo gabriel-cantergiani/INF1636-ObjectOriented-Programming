@@ -589,7 +589,7 @@ public class Regras {
 	private boolean verificaPossivelRoque(int i, int j){
 
 
-			if (posicoes[i][j] instanceof Torre && peça.getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
+			if (posicoes[i][j] instanceof Torre && posicoes[i][j].getCor() == 0 && possivelRoqueBranco == 1 && (movTorreBrancaDir == 0 || movTorreBrancaEsq == 0)) {
 				if (verificaRoque(j,0) == true) {
 					possivelRoqueBranco = 0;
 					selecao = 0;
@@ -598,7 +598,7 @@ public class Regras {
 				}
 			}
 			
-			if (posicoes[i][j] instanceof Torre && peça.getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
+			if (posicoes[i][j] instanceof Torre && posicoes[i][j].getCor() == 1 && possivelRoquePreto == 1 && (movTorrePretaDir == 0 || movTorrePretaEsq == 0)) {
 				if (verificaRoque(j,1) == true) {
 					possivelRoquePreto = 0;
 					selecao = 0;
@@ -677,14 +677,47 @@ public class Regras {
 	private void verificaXequeMate(){
 
 		int m = 0;
+		String resultado;
+		int cor;
 
 		for(int k=0; k<8; k++)
 				for(int p=0;p<8;p++)
 					if(casas[k][p] == 1)
 						m += 1;
 
-		if(m==0)
+		if(m==0){
 			System.out.println("=====XEQUE-MATE=====");
 
+			if(vez != peça.getCor()){
+				cor = peça.getCor();
+				if(cor == 0)
+					resultado = "Xeque Mate! O Jogador 1 (Branco) ganhou!";
+				else
+					resultado = "Xeque Mate! O Jogador 2 (Preto) ganhou!";
+			}
+			else
+				resultado = "Empate! O Jogo acabou por congelamento!";
+			
+			tab.notificaXequeMate(resultado);
+		}
+
+	}
+
+
+	protected void reiniciaJogo(){
+		selecao = 0;
+		peça = null;
+		peçaAux = null;
+		eMovRei = 0;
+		vez = 0;
+		movReiBranco = 0;
+		movReiPreto = 0;
+		movTorreBrancaDir = 0;
+		movTorreBrancaEsq = 0;
+		movTorrePretaDir = 0;
+		movTorrePretaEsq = 0;
+		possivelRoqueBranco = 0;
+		possivelRoquePreto = 0;
+		emXeque = 0;
 	}
 }

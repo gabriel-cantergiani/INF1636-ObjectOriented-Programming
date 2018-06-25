@@ -9,6 +9,7 @@ public class Tabuleiro implements Observado{
 	private Peça[][] posicoes = new Peça[8][8];
 	private Regras regras = new Regras(casas,posicoes,this);
 	private Observador obs;
+	private String resultado;
 	
 	private Tabuleiro() {
 		
@@ -55,6 +56,9 @@ public class Tabuleiro implements Observado{
 					posicoes[i][j] = null;
 			}
 		}
+
+		regras.reiniciaJogo();
+
 	}
 	
 	public Peça[][] getPeças(){
@@ -98,6 +102,10 @@ public class Tabuleiro implements Observado{
 	
 	public void remove(Observador o) {
 		
+	}
+
+	public String getResultado(){
+		return resultado;
 	}
 
 	protected String traduzMatrizes(){
@@ -262,4 +270,9 @@ public class Tabuleiro implements Observado{
 		zeraCasas();
 	}
 	
+	protected void notificaXequeMate(String result){
+		resultado = result;
+		obs.notify(this,3);
+	}
+
 }

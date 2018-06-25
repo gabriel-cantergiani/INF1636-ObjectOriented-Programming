@@ -94,6 +94,8 @@ public class XadrezPainel extends JPanel implements Observador{
 			repaint();
 		else if(i==2)
 			mostraMenuSelecao();
+		else if(i==3)
+			mostraAvisoXequeMate();
 	}
 	
 	public void mostraMenuSelecao() {
@@ -161,4 +163,16 @@ public class XadrezPainel extends JPanel implements Observador{
 		menu.add(botSalvar);
 		menu.show(this, x, y);
 	}
+
+	private void mostraAvisoXequeMate(){
+
+		String result = observado.getResultado();
+
+		JOptionPane.showMessageDialog(XadrezFrame.getXadrezFrame(), result, "O Jogo Acabou", JOptionPane.INFORMATION_MESSAGE);
+
+		XadrezFrame.getXadrezFrame().setVisible(false);
+		Inicializador.getInicializador().setVisible(true);
+		
+	}
+
 }
