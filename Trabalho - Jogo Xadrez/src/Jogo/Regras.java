@@ -709,10 +709,14 @@ public class Regras {
 		if(emXeque==1)
 			return;
 
+		int x=0,y=0, congelamento=0;
+
 		for(int k=0; k<8; k++)
 				for(int p=0;p<8;p++)
-					if(posicoes[k][p] instanceof Rei && posicoes[k][p].getCor() != peça.getCor())
+					if(posicoes[k][p] instanceof Rei && posicoes[k][p].getCor() != peça.getCor()){
 						movimentaRei(k,p,casas);
+						x = k; y = p;
+					}
 
 		int m = 0;
 
@@ -722,8 +726,22 @@ public class Regras {
 						m += 1;
 
 
-		if(m==0)
-			tab.notificaXequeMate("Empate! O Jogo acabou por congelamento!");
+		if(m==0){
+			
+			for(int k = (x-1); k<= (x+1); k++){
+				for(int p = (y-1); p <= (y+1); p++){
+					if( k >= 0 && p>=0)
+						if( k <= 7 && p<= 7)
+							if(posicoes[k][p]==null)
+								congelamento = 1;
+						
+				}
+			}
+			
+
+			if(congelamento == 1)
+				tab.notificaXequeMate("Empate! O Jogo acabou por congelamento!");
+		}
 
 	}
 

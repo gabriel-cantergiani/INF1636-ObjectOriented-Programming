@@ -168,7 +168,7 @@ public class XadrezPainel extends JPanel implements Observador{
 
 		String result = observado.getResultado();
 
-		JOptionPane.showMessageDialog(XadrezFrame.getXadrezFrame(), result, "O Jogo Acabou", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(XadrezFrame.getXadrezFrame(), result, "Fim de Jogo", JOptionPane.INFORMATION_MESSAGE);
 
 		XadrezFrame.getXadrezFrame().setVisible(false);
 		Inicializador.getInicializador().setVisible(true);
