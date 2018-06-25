@@ -1,0 +1,1 @@
+T1 C1 B1 RA1 nulo B1 C1 T1 P1 nulo P0 nulo RE1 nulo P1 nulo nulo P1 nulo nulo P1 nulo nulo nulo nulo nulo nulo nulo nulo P1 nulo P1 nulo nulo nulo nulo nulo nulo nulo nulo nulo nulo C0 nulo nulo P0 nulo C0 P0 P0 RA0 P0 P0 nulo P0 P0 T0 nulo B0 nulo RE0 B0 nulo T0 V1 010000 X0
